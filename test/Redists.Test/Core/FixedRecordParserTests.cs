@@ -44,7 +44,7 @@ namespace Redists.Test.Core
         [Fact]
         public void ParseRaw()
         {
-            var records = parser.ParseRawString("0000000000111:0000000000000000222¤0000000000333:0000000000000000444¤0000000000555:0000000000000000666¤");
+            var records = parser.ParseRawString("0000000000111:0000000000000000222#0000000000333:0000000000000000444#0000000000555:0000000000000000666#");
 
             Assert.NotNull(records);
             Assert.Equal(3, records.Length);

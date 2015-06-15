@@ -29,7 +29,7 @@ namespace Redists.Core
             while ( (partialRaw = await ReadAsync(redisKey, cursor).ConfigureAwait(false))!=string.Empty)
             {
                 var lastindex = partialRaw.LastIndexOf(Constants.InterRecordDelimiter);
-                var partialRawStrict = partialRaw.Remove(lastindex, partialRaw.Length - 1 - lastindex);
+                var partialRawStrict = partialRaw[partialRaw.Length-1]!=Constants.InterRecordDelimiter ? partialRaw.Remove(lastindex + 1) : partialRaw;
 
                 records.AddRange(parser.ParseRawString(partialRawStrict));
                 cursor += partialRawStrict.Length;
