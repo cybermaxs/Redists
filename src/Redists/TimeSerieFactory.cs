@@ -1,5 +1,6 @@
 ﻿using Redists.Utils;
 using StackExchange.Redis;
+using System;
 
 namespace Redists
 {
@@ -9,6 +10,9 @@ namespace Redists
         {
             Guard.NotNull(db, "db");
             Guard.NotNullOrEmpty(name, "name");
+
+            if (!db.Multiplexer.IsConnected)
+                throw new InvalidOperationException("redis connection is not open");
 
             return new TimeSerie(db, name, settings ?? new TimeSerieSettings());
         }

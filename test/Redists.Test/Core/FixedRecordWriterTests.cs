@@ -32,7 +32,7 @@ namespace Redists.Test.Core
             Assert.False(t.IsFaulted);
             Assert.False(t.IsCanceled);
 
-            mockOfDb.Verify(db => db.StringAppendAsync(key, "0000000000123:0000000000000000456¤", It.IsAny<CommandFlags>()), Times.Once);
+            mockOfDb.Verify(db => db.StringAppendAsync(key, "0000000000123:0000000000000000456#", It.IsAny<CommandFlags>()), Times.Once);
         }
     }
 }
