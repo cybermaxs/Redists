@@ -2,6 +2,8 @@
 using Redists.Extensions;
 using StackExchange.Redis;
 using System;
+using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Redists
@@ -32,11 +34,19 @@ namespace Redists
             return writer.AppendAsync(tsKey, newRecord);
         }
 
-        public Task<Record[]> AllAsync(DateTime at)
+        public async Task<Record[]> AllAsync(DateTime at)
         {
-            var tsKey = this.GetRedisKeyName(at);
+            var dts = at.ToKeyDateTimes(DateTime.UtcNow, this.settings.SerieNormalizeFactor);
 
-            return reader.ReadAllAsync(tsKey);
+            var tasks = new List<Task<Record[]>>();
+
+            foreach(var dt in dts)
+            {
+                var tsKey = this.GetRedisKeyName(dt);
+                tasks.Add(reader.ReadAllAsync(tsKey));
+            }
+            await Task.WhenAll(tasks.ToArray());
+            return tasks.SelectMany(t => t.Result).ToArray();
         }
 
         public string GetRedisKeyName(DateTime at)

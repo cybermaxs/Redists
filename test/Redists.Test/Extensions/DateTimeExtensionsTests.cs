@@ -47,5 +47,17 @@ namespace Redists.Test.Extensions
             Assert.Equal(new DateTime(2015, 6, 10, 21, 0, 0), res[3]);
             Assert.Equal(new DateTime(2015, 6, 10, 22, 0, 0), res[4]);
         }
+
+        [Fact]
+        public void ToKeyDateTimes_WhenEqual_ShouldBeSame()
+        {
+            var from = new DateTime(2015, 6, 10, 18, 3, 15);
+            var to = new DateTime(2015, 6, 10, 18, 8, 15);
+
+            var res = from.ToKeyDateTimes(to, 3600);
+
+            Assert.Equal(1, res.Count());
+            Assert.Equal(new DateTime(2015, 6, 10, 18, 0, 0), res[0]);
+        }
     }
 }

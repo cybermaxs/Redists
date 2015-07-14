@@ -26,7 +26,7 @@ namespace Redists.Core
             List<Record> records = new List<Record>();
             string partialRaw = string.Empty;
             int cursor = 0;
-            while ( (partialRaw = await ReadAsync(redisKey, cursor).ConfigureAwait(false))!=string.Empty)
+            while ( (partialRaw = await ReadBlockAsync(redisKey, cursor).ConfigureAwait(false))!=string.Empty)
             {
                 var lastindex = partialRaw.LastIndexOf(Constants.InterRecordDelimiter);
                 var partialRawStrict = partialRaw[partialRaw.Length-1]!=Constants.InterRecordDelimiter ? partialRaw.Remove(lastindex + 1) : partialRaw;
@@ -41,7 +41,7 @@ namespace Redists.Core
             return records.ToArray();
         }
 
-        private async Task<string> ReadAsync(string redisKey, int start)
+        private async Task<string> ReadBlockAsync(string redisKey, int start)
         {
             var raw = (string)await this.db.StringGetRangeAsync(redisKey, start, start + Constants.BufferSize).ConfigureAwait(false);
             return raw;

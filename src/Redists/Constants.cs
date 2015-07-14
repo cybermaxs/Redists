@@ -1,5 +1,4 @@
-﻿
-namespace Redists
+﻿namespace Redists
 {
     /// <summary>
     /// Various Constants.
