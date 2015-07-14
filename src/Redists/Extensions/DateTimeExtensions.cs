@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Redists.Extensions
 {
@@ -53,6 +54,20 @@ namespace Redists.Extensions
         public static long ToRoundedSecondsTimestamp(this DateTime date, long factor)
         {
             return ((long)date.ToSecondsTimestamp() / factor) * factor;
+        }
+
+
+        public static DateTime[] ToKeyDateTimes(this DateTime from, DateTime to, long factor)
+        {
+            var res = new List<DateTime>();
+            var end = to.ToSecondsTimestamp();
+            var current = from.ToRoundedSecondsTimestamp(factor);
+            while (current <= end)
+            {
+                res.Add(new DateTime(EpochTicks+ current * TimeSpan.TicksPerSecond));
+                current += factor;
+            }
+            return res.ToArray();
         }
     }
 }
