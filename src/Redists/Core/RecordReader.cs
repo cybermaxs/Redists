@@ -8,14 +8,14 @@ using Redists.Extensions;
 
 namespace Redists.Core
 {
-    internal class RecordReader
+    internal class RecordReader : IRecordReader
     {
-        private readonly IDatabase db;
+        private readonly IDatabaseAsync dbAsync;
         private readonly bool fixedRecordSize;
         private readonly RecordParser parser;
-        public RecordReader(IDatabase db, bool fixedRecordSize)
+        public RecordReader(IDatabaseAsync dbAsync, bool fixedRecordSize)
         {
-            this.db = db;
+            this.dbAsync = dbAsync;
             this.fixedRecordSize = fixedRecordSize;
             this.parser = new RecordParser(fixedRecordSize);
         }
@@ -43,7 +43,7 @@ namespace Redists.Core
 
         private async Task<string> ReadBlockAsync(string redisKey, int start)
         {
-            var raw = (string)await this.db.StringGetRangeAsync(redisKey, start, start + Constants.BufferSize).ConfigureAwait(false);
+            var raw = (string)await this.dbAsync.StringGetRangeAsync(redisKey, start, start + Constants.BufferSize).ConfigureAwait(false);
             return raw;
         }
     }

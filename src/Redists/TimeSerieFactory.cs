@@ -1,20 +1,26 @@
-﻿using Redists.Utils;
+﻿using Redists.Core;
+using Redists.Utils;
 using StackExchange.Redis;
 using System;
+using Redists.Extensions;
 
 namespace Redists
 {
     public static class TimeSerieFactory
     {
-        public static ITimeSerie New(IDatabase db, string name, TimeSerieSettings settings=null)
+        public static ITimeSerie New(IDatabaseAsync dbAsync, string name, TimeSerieSettings settings = null)
         {
-            Guard.NotNull(db, "db");
+            Guard.NotNull(dbAsync, "dbAsync");
             Guard.NotNullOrEmpty(name, "name");
 
-            if (!db.Multiplexer.IsConnected)
+            if (!dbAsync.Multiplexer.IsConnected)
                 throw new InvalidOperationException("redis connection is not open");
 
-            return new TimeSerie(db, name, settings ?? new TimeSerieSettings());
+            settings = settings ?? new TimeSerieSettings();
+            var reader = new RecordReader(dbAsync, settings.UseFixedRecordSize);
+            var writer = new RecordWriter(dbAsync, settings.UseFixedRecordSize);
+
+            return new TimeSerie(name, settings, reader, writer);
         }
     }
 }

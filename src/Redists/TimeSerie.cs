@@ -13,16 +13,16 @@ namespace Redists
         private readonly string name;
         private readonly TimeSerieSettings settings;
 
-        private readonly RecordWriter writer;
-        private readonly RecordReader reader;
+        private readonly IRecordWriter writer;
+        private readonly IRecordReader reader;
 
-        public TimeSerie(IDatabase db, string name, TimeSerieSettings settings)
+        public TimeSerie(string name, TimeSerieSettings settings, IRecordReader reader, IRecordWriter writer)
         {
             this.name = name;
             this.settings = settings;
 
-            this.reader = new RecordReader(db, settings.UseFixedRecordSize);
-            this.writer = new RecordWriter(db, settings.UseFixedRecordSize);
+            this.reader = reader;
+            this.writer = writer;
         }
 
         public Task AddAsync(long value, DateTime at)

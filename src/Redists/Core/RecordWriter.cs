@@ -1,27 +1,23 @@
 ﻿using StackExchange.Redis;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Redists.Core
 {
-    internal class RecordWriter
+    internal class RecordWriter : IRecordWriter
     {
-        private readonly IDatabase db;
+        private readonly IDatabaseAsync dbAsync;
         private RecordParser parser;
 
-        public RecordWriter(IDatabase db, bool isFixed)
+        public RecordWriter(IDatabaseAsync dbAsync, bool isFixed)
         {
-            this.db = db;
+            this.dbAsync = dbAsync;
             this.parser = new RecordParser(isFixed);
         }
 
-        public Task AppendAsync(string redisKey, Record record)
+        public Task<long> AppendAsync(string redisKey, Record record)
         {
             var toAppend = parser.Serialize(record) + Constants.InterRecordDelimiter;
-            return this.db.StringAppendAsync(redisKey, toAppend); ;
+            return this.dbAsync.StringAppendAsync(redisKey, toAppend); ;
         }
     }
 }

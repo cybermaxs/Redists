@@ -4,7 +4,7 @@ using Redists.Extensions;
 
 namespace Redists.Core
 {
-    internal class RecordParser
+    internal class RecordParser : IRecordParser
     {
         public static int FixedKeyLength = 13;
         public static int FixedValueLength = 19;
