@@ -11,12 +11,12 @@ namespace Redists
     internal class TimeSerie : ITimeSerie
     {
         private readonly string name;
-        private readonly TimeSerieSettings settings;
+        private readonly Settings settings;
 
         private readonly IRecordWriter writer;
         private readonly IRecordReader reader;
 
-        public TimeSerie(string name, TimeSerieSettings settings, IRecordReader reader, IRecordWriter writer)
+        public TimeSerie(string name, Settings settings, IRecordReader reader, IRecordWriter writer)
         {
             this.name = name;
             this.settings = settings;
@@ -36,7 +36,7 @@ namespace Redists
 
         public async Task<Record[]> AllAsync(DateTime at)
         {
-            var dts = at.ToKeyDateTimes(DateTime.UtcNow, this.settings.SerieNormalizeFactor);
+            var dts = at.ToKeyDateTimes(DateTime.UtcNow, this.settings.SerieNormFactor);
 
             var tasks = new List<Task<Record[]>>();
 
@@ -51,7 +51,7 @@ namespace Redists
 
         public string GetRedisKeyName(DateTime at)
         {
-            return "ts#" + this.name + "#" + at.ToRoundedSecondsTimestamp(this.settings.SerieNormalizeFactor);
+            return "ts#" + this.name + "#" + at.ToRoundedSecondsTimestamp(this.settings.SerieNormFactor);
         }
     }
 }

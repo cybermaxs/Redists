@@ -19,7 +19,7 @@ namespace Redists.Test
         {
             this.fixture = new Fixture();
             redisServer.Reset();
-            tsClient = TimeSerieFactory.New(redisServer.GetDatabase(0), "myts", new TimeSerieSettings(3600, 60, false));
+            tsClient = TimeSerieFactory.New(redisServer.GetDatabase(0), "myts", new Settings(3600, 60, false));
         }
 
         [Fact]
