@@ -2,6 +2,7 @@
 using Ploeh.AutoFixture;
 using Redists.Core;
 using StackExchange.Redis;
+using System;
 using Xunit;
 
 namespace Redists.Test.Core
@@ -17,7 +18,7 @@ namespace Redists.Test.Core
             mockOfDb = new Mock<IDatabase>();
             mockOfDb.Setup(db => db.StringAppendAsync(It.IsAny<string>(), It.IsAny<RedisValue>(), It.IsAny<CommandFlags>())).ReturnsAsync(10);
 
-            writer = new RecordWriter(mockOfDb.Object, false);
+            writer = new RecordWriter(mockOfDb.Object, false, TimeSpan.MaxValue);
         }
 
         [Fact]

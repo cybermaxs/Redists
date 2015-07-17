@@ -18,7 +18,7 @@ namespace Redists
 
             settings = settings ?? new Settings();
             var reader = new RecordReader(dbAsync, settings.UseFixedRecordSize);
-            var writer = new RecordWriter(dbAsync, settings.UseFixedRecordSize);
+            var writer = new RecordWriter(dbAsync, settings.UseFixedRecordSize, settings.SerieTtl);
 
             return new TimeSerie(name, settings, reader, writer);
         }
