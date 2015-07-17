@@ -13,7 +13,7 @@ namespace Redists.Test.Fixtures
         public RedisServerFixture()
         {
             if(!IsRunning)
-                this.server = Process.Start(@"..\..\..\..\packages\Redis-64.2.8.19\redis-server.exe");
+                this.server = Process.Start(@"..\..\..\..\packages\Redis-64.2.8.21\redis-server.exe");
 
             this.mux = ConnectionMultiplexer.Connect("localhost:6379,allowAdmin=true");
         }
