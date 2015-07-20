@@ -34,6 +34,20 @@ namespace Redists
             return writer.AppendAsync(tsKey, newRecord);
         }
 
+        public Task AddAsync(KeyValuePair<long, DateTime>[] datas)
+        {
+            var tasks = new List<Task>();
+            foreach (var kvp in datas)
+            {
+                var tsKey = this.GetRedisKeyName(kvp.Value);
+                var ts = kvp.Value.ToTimestamp();
+                var newRecord = new Record(ts, kvp.Key);
+
+                tasks.Add(writer.AppendAsync(tsKey, newRecord));
+            }
+            return Task.WhenAll(tasks.ToArray());
+        }
+
         public async Task<Record[]> AllAsync(DateTime at)
         {
             var dts = at.ToKeyDateTimes(DateTime.UtcNow, this.settings.SerieNormFactor);
