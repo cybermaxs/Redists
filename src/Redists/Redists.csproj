@@ -39,10 +39,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
+    <Compile Include="Core\DynamicRecordParser.cs" />
     <Compile Include="Core\IRecordParser.cs" />
     <Compile Include="Core\IRecordReader.cs" />
     <Compile Include="Core\IRecordWriter.cs" />
-    <Compile Include="Core\RecordParser.cs" />
+    <Compile Include="Core\FixedRecordParser.cs" />
     <Compile Include="Core\RecordReader.cs" />
     <Compile Include="Core\RecordWriter.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />

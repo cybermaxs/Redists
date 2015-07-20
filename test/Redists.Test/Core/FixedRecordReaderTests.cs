@@ -21,7 +21,8 @@ namespace Redists.Test.Core
             mockOfDb.Setup(db => db.StringGetRangeAsync("short", It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CommandFlags>())).ReturnsAsync(Generate(100));
             mockOfDb.Setup(db => db.StringGetRangeAsync("long", It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CommandFlags>())).Returns<RedisKey, long, long, CommandFlags>(this.GeneratePartial5000);
             mockOfDb.Setup(db => db.StringGetRangeAsync("broken", It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CommandFlags>())).Returns<RedisKey, long, long, CommandFlags>(this.GeneratePartial5000);
-            reader = new RecordReader(mockOfDb.Object, true);
+            var parser = new FixedRecordParser();
+            reader = new RecordReader(mockOfDb.Object, parser);
         }
 
         [Fact]
@@ -72,7 +73,7 @@ namespace Redists.Test.Core
         #region Privates
         private string Generate(int nbItems=100)
         {
-            RecordParser parser = new RecordParser(true);
+            FixedRecordParser parser = new FixedRecordParser();
             StringBuilder builder = new StringBuilder();
             foreach (var i in Enumerable.Range(1, nbItems))
             {
@@ -83,7 +84,7 @@ namespace Redists.Test.Core
 
         private Task<RedisValue> GeneratePartial5000(RedisKey k, long start, long end, CommandFlags _)
         {
-            RecordParser parser = new RecordParser(true);
+            FixedRecordParser parser = new FixedRecordParser();
             //generate data
             StringBuilder builder = new StringBuilder();
             foreach (var i in Enumerable.Range(1, 5000))

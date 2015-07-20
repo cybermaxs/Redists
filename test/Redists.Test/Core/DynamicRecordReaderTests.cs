@@ -9,19 +9,20 @@ using Xunit;
 
 namespace Redists.Test.Core
 {
-    public class VariableRecordReaderTests
+    public class DynamicRecordReaderTests
     {
         private readonly RecordReader reader;
         private Fixture fixture = new Fixture();
         private Mock<IDatabase> mockOfDb;
 
-         public VariableRecordReaderTests()
+         public DynamicRecordReaderTests()
         {
             mockOfDb = new Mock<IDatabase>();
             mockOfDb.Setup(db => db.StringGetRangeAsync("short", It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CommandFlags>())).ReturnsAsync(Generate(100));
             mockOfDb.Setup(db => db.StringGetRangeAsync("long", It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CommandFlags>())).Returns<RedisKey, long, long, CommandFlags>(this.GeneratePartial5000);
             mockOfDb.Setup(db => db.StringGetRangeAsync("broken", It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CommandFlags>())).Returns<RedisKey, long, long, CommandFlags>(this.GeneratePartial5000);
-            reader = new RecordReader(mockOfDb.Object, false);
+            var parser = new DynamicRecordParser();
+            reader = new RecordReader(mockOfDb.Object, parser);
         }
 
         [Fact]

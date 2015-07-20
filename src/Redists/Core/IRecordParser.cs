@@ -1,4 +1,5 @@
 ﻿using System;
+
 namespace Redists.Core
 {
     interface IRecordParser

@@ -17,8 +17,9 @@ namespace Redists.Test.Core
         {
             mockOfDb = new Mock<IDatabase>();
             mockOfDb.Setup(db => db.StringAppendAsync(It.IsAny<string>(), It.IsAny<RedisValue>(), It.IsAny<CommandFlags>())).ReturnsAsync(10);
+            var parser = new FixedRecordParser();
 
-            writer = new RecordWriter(mockOfDb.Object, true, TimeSpan.MaxValue);
+            writer = new RecordWriter(mockOfDb.Object, parser, TimeSpan.MaxValue);
         }
 
         [Fact]

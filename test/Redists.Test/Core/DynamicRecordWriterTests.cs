@@ -7,18 +7,18 @@ using Xunit;
 
 namespace Redists.Test.Core
 {
-    public class VariableRecordWriterTests
+    public class DynamicRecordWriterTests
     {
         private readonly RecordWriter writer;
         private Fixture fixture = new Fixture();
         private Mock<IDatabase> mockOfDb;
 
-        public VariableRecordWriterTests()
+        public DynamicRecordWriterTests()
         {
             mockOfDb = new Mock<IDatabase>();
             mockOfDb.Setup(db => db.StringAppendAsync(It.IsAny<string>(), It.IsAny<RedisValue>(), It.IsAny<CommandFlags>())).ReturnsAsync(10);
-
-            writer = new RecordWriter(mockOfDb.Object, false, TimeSpan.MaxValue);
+            var parser = new DynamicRecordParser(); ;
+            writer = new RecordWriter(mockOfDb.Object, parser, TimeSpan.MaxValue);
         }
 
         [Fact]

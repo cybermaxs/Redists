@@ -9,12 +9,12 @@ namespace Redists.Core
     {
         private readonly IDatabaseAsync dbAsync;
         private TimeSpan? ttl;
-        private RecordParser parser;
+        private IRecordParser parser;
 
-        public RecordWriter(IDatabaseAsync dbAsync, bool isFixed, TimeSpan? ttl)
+        public RecordWriter(IDatabaseAsync dbAsync, IRecordParser parser, TimeSpan? ttl)
         {
             this.dbAsync = dbAsync;
-            this.parser = new RecordParser(isFixed);
+            this.parser = parser;
             this.ttl = ttl;
         }
 

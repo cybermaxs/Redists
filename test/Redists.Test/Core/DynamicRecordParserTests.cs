@@ -3,9 +3,9 @@ using Xunit;
 
 namespace Redists.Test.Core
 {
-    public class VariableRecordParserTests
+    public class DynamicRecordParserTests
     {
-        RecordParser parser = new RecordParser(false);
+        IRecordParser parser = new DynamicRecordParser();
 
         [Fact]
         public void SerializationWithDefault()

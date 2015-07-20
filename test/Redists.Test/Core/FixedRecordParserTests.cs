@@ -10,7 +10,7 @@ namespace Redists.Test.Core
 {
     public class FixedRecordParserTests
     {
-        RecordParser parser = new RecordParser(true);
+        IRecordParser parser = new FixedRecordParser();
 
         [Fact]
         public void SerializationWithDefault()

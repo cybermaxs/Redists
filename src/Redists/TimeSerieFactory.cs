@@ -17,8 +17,9 @@ namespace Redists
                 throw new InvalidOperationException("redis connection is not open");
 
             settings = settings ?? new Settings();
-            var reader = new RecordReader(dbAsync, settings.UseFixedRecordSize);
-            var writer = new RecordWriter(dbAsync, settings.UseFixedRecordSize, settings.SerieTtl);
+            var parser = settings.UseFixedRecordSize ? (IRecordParser)new FixedRecordParser() : new DynamicRecordParser();
+            var reader = new RecordReader(dbAsync, parser);
+            var writer = new RecordWriter(dbAsync, parser, settings.SerieTtl);
 
             return new TimeSerie(name, settings, reader, writer);
         }

@@ -1,23 +1,17 @@
 ﻿using StackExchange.Redis;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Redists.Extensions;
 
 namespace Redists.Core
 {
     internal class RecordReader : IRecordReader
     {
         private readonly IDatabaseAsync dbAsync;
-        private readonly bool fixedRecordSize;
-        private readonly RecordParser parser;
-        public RecordReader(IDatabaseAsync dbAsync, bool fixedRecordSize)
+        private readonly IRecordParser parser;
+        public RecordReader(IDatabaseAsync dbAsync, IRecordParser parser)
         {
             this.dbAsync = dbAsync;
-            this.fixedRecordSize = fixedRecordSize;
-            this.parser = new RecordParser(fixedRecordSize);
+            this.parser = parser;
         }
 
         public async Task<Record[]> ReadAllAsync(string redisKey)

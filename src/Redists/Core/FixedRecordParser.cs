@@ -4,27 +4,21 @@ using Redists.Extensions;
 
 namespace Redists.Core
 {
-    internal class RecordParser : IRecordParser
+    internal class FixedRecordParser : IRecordParser
     {
         public static int FixedKeyLength = 13;
         public static int FixedValueLength = 19;
 
-        static RecordParser()
+        static FixedRecordParser()
         {
             FixedKeyLength = DateTime.UtcNow.ToTimestamp().ToString().Length;
             FixedValueLength = long.MaxValue.ToString().Length;
         }
 
-        private readonly bool isFixed;
-        public RecordParser(bool isFixed)
-        {
-            this.isFixed = isFixed;
-        }
-
         #region publics
         public Record[] ParseRawString(string raw)
         {
-            return this.isFixed ? ParseFixed(raw) : ParseDynamic(raw);
+            return ParseFixed(raw);
         }
         public Record Deserialize(string rawRecord)
         {
@@ -42,14 +36,8 @@ namespace Redists.Core
             if (record == Record.Empty)
                 return string.Empty;
 
-            var stringTs = record.ts.ToString();
-            var stringValue = record.value.ToString();
-
-            if (this.isFixed)
-            {
-                stringTs = stringTs.PadLeft(FixedKeyLength, Constants.RecordPadChar);
-                stringValue = stringValue.PadLeft(FixedValueLength, Constants.RecordPadChar);
-            }
+            var stringTs = record.ts.ToString().PadLeft(FixedKeyLength, Constants.RecordPadChar);
+            var stringValue = record.value.ToString().PadLeft(FixedValueLength, Constants.RecordPadChar);
 
             return stringTs + Constants.IntraRecordDelimiter + stringValue;
         }
@@ -70,12 +58,6 @@ namespace Redists.Core
                 current += (recordFixedSize + 1);
             }
             return results;
-        }
-
-        private Record[] ParseDynamic(string raw)
-        {
-            var parts = raw.Split(new char[] { Constants.InterRecordDelimiter }, StringSplitOptions.RemoveEmptyEntries);
-            return parts.Select(p => Deserialize(p)).ToArray();
         }
         #endregion
 

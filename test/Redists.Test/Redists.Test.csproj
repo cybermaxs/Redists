@@ -62,10 +62,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\FixedRecordReaderTests.cs" />
-    <Compile Include="Core\VariableRecordReaderTests.cs" />
-    <Compile Include="Core\VariableRecordWriterTests.cs" />
+    <Compile Include="Core\DynamicRecordReaderTests.cs" />
+    <Compile Include="Core\DynamicRecordWriterTests.cs" />
     <Compile Include="Core\FixedRecordWriterTests.cs" />
-    <Compile Include="Core\VariableRecordParserTests.cs" />
+    <Compile Include="Core\DynamicRecordParserTests.cs" />
     <Compile Include="Core\FixedRecordParserTests.cs" />
     <Compile Include="Extensions\DateTimeExtensionsTests.cs" />
     <Compile Include="Extensions\Int64ExtensionsTests.cs" />
