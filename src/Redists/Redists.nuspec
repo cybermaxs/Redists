@@ -8,7 +8,6 @@
     <owners>Cybermaxs</owners>
     <licenseUrl>https://github.com/Cybermaxs/Redists/blob/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/Cybermaxs/Redists</projectUrl>
-    <iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A very compact representation of a list of samples, usually referred as time series. Inspired from https://github.com/antirez/redis-timeseries </description>
     <releaseNotes>Beta Release.</releaseNotes>
@@ -21,6 +20,6 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="..\bin\Release\Redists*.*" target="lib\net45" />
+    <file src="bin\Release\Redists*.*" target="lib\net45" />
   </files>
 </package>

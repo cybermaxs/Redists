@@ -57,7 +57,6 @@
     <Compile Include="Utils\Guard.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="appveyor.yml" />
     <None Include="packages.config" />
     <None Include="Redists.nuspec" />
   </ItemGroup>
