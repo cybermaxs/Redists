@@ -1,0 +1,26 @@
+version: 0.0.{build}
+
+branches:
+  only:
+    - master
+
+assembly_info:
+  patch: true
+  file: AssemblyInfo.*
+  assembly_version: "{version}"
+  assembly_file_version: "{version}"
+  assembly_informational_version: "{version}"
+
+configuration: Release
+
+build:
+	verbosity: minimal
+  project: Redists.sln
+
+before_build:
+- nuget restore
+
+test:
+  categories:
+    except:
+    - Integration
