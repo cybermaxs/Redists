@@ -14,7 +14,8 @@ assembly_info:
 configuration: Release
 
 build:
-	verbosity: minimal
+  verbosity: minimal
+  publish_nuget: true
   project: Redists.sln
 
 before_build:
