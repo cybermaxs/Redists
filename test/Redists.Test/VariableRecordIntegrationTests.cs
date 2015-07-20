@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 using Redists.Extensions;
+using System.Threading;
 
 namespace Redists.Test
 {
@@ -19,7 +20,7 @@ namespace Redists.Test
         {
             this.fixture = new Fixture();
             redisServer.Reset();
-            tsClient = TimeSerieFactory.New(redisServer.GetDatabase(0), "myts", new Settings(3600, 60, false));
+            tsClient = TimeSerieFactory.New(redisServer.GetDatabase(0), "myts", new Settings(3600, 60, false, TimeSpan.FromSeconds(1)));
         }
 
         [Fact]
@@ -53,7 +54,10 @@ namespace Redists.Test
 
             var tasks = new List<Task>();
             foreach (var i in Enumerable.Range(1, 1000))
+            {
                 tasks.Add(tsClient.AddAsync(1, now));
+                Thread.Sleep(100);
+            }
             await Task.WhenAll(tasks);
 
             var r = await tsClient.AllAsync(now);
