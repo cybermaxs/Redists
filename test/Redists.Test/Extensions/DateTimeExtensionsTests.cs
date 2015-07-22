@@ -38,7 +38,7 @@ namespace Redists.Test.Extensions
             var from = new DateTime(2015, 6, 10, 18, 3, 15);
             var to = new DateTime(2015, 6, 10, 22, 3, 15);
 
-            var res = from.ToKeyDateTimes(to, 3600);
+            var res = from.ToKeyDateTimes(to, 3600*1000);
 
             Assert.Equal(5, res.Count());
             Assert.Equal(new DateTime(2015, 6, 10, 18, 0, 0), res[0]);
@@ -54,7 +54,7 @@ namespace Redists.Test.Extensions
             var from = new DateTime(2015, 6, 10, 18, 3, 15);
             var to = new DateTime(2015, 6, 10, 18, 8, 15);
 
-            var res = from.ToKeyDateTimes(to, 3600);
+            var res = from.ToKeyDateTimes(to, 3600*1000);
 
             Assert.Equal(1, res.Count());
             Assert.Equal(new DateTime(2015, 6, 10, 18, 0, 0), res[0]);

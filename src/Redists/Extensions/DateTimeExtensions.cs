@@ -60,11 +60,11 @@ namespace Redists.Extensions
         public static DateTime[] ToKeyDateTimes(this DateTime from, DateTime to, long factor)
         {
             var res = new List<DateTime>();
-            var end = to.ToSecondsTimestamp();
-            var current = from.ToRoundedSecondsTimestamp(factor);
+            var end = to.ToTimestamp();
+            var current = from.ToRoundedTimestamp(factor);
             while (current <= end)
             {
-                res.Add(new DateTime(EpochTicks+ current * TimeSpan.TicksPerSecond));
+                res.Add(new DateTime(EpochTicks+ current * TimeSpan.TicksPerMillisecond));
                 current += factor;
             }
             return res.ToArray();

@@ -1,18 +1,21 @@
 ﻿using System;
 
-namespace Redists
+namespace Redists.Configuration
 {
-    public class Settings
+    /// <summary>
+    /// Various settings to configure a timeseries.
+    /// </summary>
+    public class TimeSerieSettings
     {
         /// <summary>
         /// Partition key factor for a Serie (Milliseconds).
         /// Used to compute the redis key name.
         /// </summary>
-        public long SerieNormFactor { get; private set; }
+        public long KeyNormFactor { get; private set; }
         /// <summary>
         /// TimeToLive for a Serie (Milliseconds).
         /// </summary>
-        public TimeSpan? SerieTtl { get; private set; }
+        public TimeSpan? Ttl { get; private set; }
         /// <summary>
         /// Normalization factor for each data point (Milliseconds).
         /// </summary>
@@ -22,13 +25,14 @@ namespace Redists
         /// default is 29 (timestamp in ms + delimiter + long)
         /// </summary>
         public bool UseFixedRecordSize { get; private set; }
-        public Settings(long serieNormalizeFactor = 3600, long recordNormalizeFactor = 1, bool useFixedRecordSize = false, TimeSpan? serieTtl = null)
+
+        public TimeSerieSettings(long serieNormalizeFactor = 3600*1000, long recordNormalizeFactor = 1000, bool useFixedRecordSize = false, TimeSpan? serieTtl = null)
         {
             if (serieNormalizeFactor < recordNormalizeFactor)
                 throw new InvalidOperationException("serieNormalizeFactor should be greater than recordNormalizeFactor");    
 
-            this.SerieNormFactor = serieNormalizeFactor;
-            this.SerieTtl = serieTtl;
+            this.KeyNormFactor = serieNormalizeFactor;
+            this.Ttl = serieTtl;
             this.RecordNormFactor = recordNormalizeFactor;
             this.UseFixedRecordSize = useFixedRecordSize;
         }

@@ -53,7 +53,7 @@
     <Compile Include="Record.cs" />
     <Compile Include="TimeSerie.cs" />
     <Compile Include="TimeSerieFactory.cs" />
-    <Compile Include="Settings.cs" />
+    <Compile Include="Configuration\TimeSerieSettings.cs" />
     <Compile Include="Utils\Guard.cs" />
   </ItemGroup>
   <ItemGroup>

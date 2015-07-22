@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 using Redists.Extensions;
+using Redists.Configuration;
 
 namespace Redists.Test
 {
@@ -19,7 +20,7 @@ namespace Redists.Test
         {
             this.fixture = new Fixture();
             redisServer.Reset();
-            tsClient = TimeSerieFactory.New(redisServer.GetDatabase(0), "myts", new Settings(3600, 60, true));
+            tsClient = TimeSerieFactory.New(redisServer.GetDatabase(0), "myts", new TimeSerieSettings(3600*1000, 60*1000, true, TimeSpan.FromHours(1)));
         }
 
         [Fact]
@@ -40,7 +41,7 @@ namespace Redists.Test
             foreach (var i in Enumerable.Range(0, 3599))
             {
                 Assert.Equal(i, r[i].value);
-                Assert.Equal(start.AddSeconds(i).ToTimestamp(), r[i].ts);
+                Assert.Equal(start.AddSeconds(i).ToRoundedTimestamp(60*1000), r[i].ts);
             }
 
         }

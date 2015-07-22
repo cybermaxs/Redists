@@ -5,18 +5,19 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Redists.Configuration;
 
 namespace Redists
 {
     internal class TimeSerie : ITimeSerie
     {
         private readonly string name;
-        private readonly Settings settings;
+        private readonly TimeSerieSettings settings;
 
         private readonly IRecordWriter writer;
         private readonly IRecordReader reader;
 
-        public TimeSerie(string name, Settings settings, IRecordReader reader, IRecordWriter writer)
+        public TimeSerie(string name, TimeSerieSettings settings, IRecordReader reader, IRecordWriter writer)
         {
             this.name = name;
             this.settings = settings;
@@ -28,7 +29,7 @@ namespace Redists
         public Task AddAsync(long value, DateTime at)
         {
             var tsKey = this.GetRedisKeyName(at);
-            var ts = at.ToTimestamp();
+            var ts = at.ToRoundedTimestamp(this.settings.RecordNormFactor);
             var newRecord = new Record(ts, value);
 
             return writer.AppendAsync(tsKey, newRecord);
@@ -40,7 +41,7 @@ namespace Redists
             foreach (var kvp in datas)
             {
                 var tsKey = this.GetRedisKeyName(kvp.Value);
-                var ts = kvp.Value.ToTimestamp();
+                var ts = kvp.Value.ToRoundedTimestamp(this.settings.RecordNormFactor);
                 var newRecord = new Record(ts, kvp.Key);
 
                 tasks.Add(writer.AppendAsync(tsKey, newRecord));
@@ -50,7 +51,7 @@ namespace Redists
 
         public async Task<Record[]> AllAsync(DateTime at)
         {
-            var dts = at.ToKeyDateTimes(DateTime.UtcNow, this.settings.SerieNormFactor);
+            var dts = at.ToKeyDateTimes(DateTime.UtcNow, this.settings.KeyNormFactor);
 
             var tasks = new List<Task<Record[]>>();
 
@@ -65,7 +66,7 @@ namespace Redists
 
         public string GetRedisKeyName(DateTime at)
         {
-            return "ts#" + this.name + "#" + at.ToRoundedSecondsTimestamp(this.settings.SerieNormFactor);
+            return "ts#" + this.name + "#" + at.ToRoundedTimestamp(this.settings.KeyNormFactor);
         }
     }
 }
