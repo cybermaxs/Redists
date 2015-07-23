@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Redists.Extensions;
+using System.Collections.Generic;
 
 namespace Redists.Core
 {
@@ -31,15 +32,12 @@ namespace Redists.Core
             return new Record(ts, value);
         }
 
-        public string Serialize(Record record)
+        public string Serialize(params Record[] records)
         {
-            if (record == Record.Empty)
+            if (records == null || records.Count() == 0)
                 return string.Empty;
 
-            var stringTs = record.ts.ToString().PadLeft(FixedKeyLength, Constants.RecordPadChar);
-            var stringValue = record.value.ToString().PadLeft(FixedValueLength, Constants.RecordPadChar);
-
-            return stringTs + Constants.IntraRecordDelimiter + stringValue;
+            return string.Join(Constants.InterRecordDelimiter.ToString(), records.Select(r=>this.SerializeInternal(r)).ToArray());
         }
         #endregion
 
@@ -58,6 +56,17 @@ namespace Redists.Core
                 current += (recordFixedSize + 1);
             }
             return results;
+        }
+
+        private string SerializeInternal(Record record)
+        {
+            if (record == Record.Empty)
+                return string.Empty;
+
+            var stringTs = record.ts.ToString().PadLeft(FixedKeyLength, Constants.RecordPadChar);
+            var stringValue = record.value.ToString().PadLeft(FixedValueLength, Constants.RecordPadChar);
+
+            return stringTs + Constants.IntraRecordDelimiter + stringValue;
         }
         #endregion
 

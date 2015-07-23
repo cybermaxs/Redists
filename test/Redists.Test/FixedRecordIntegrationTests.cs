@@ -60,5 +60,28 @@ namespace Redists.Test
             var r = await tsClient.AllAsync(now);
             Assert.Equal(1000, r.Length);
         }
+
+        [Fact]
+        [Trait("Category", "Integration")]
+        public async Task Batch()
+        {
+            var start = DateTime.UtcNow.Date;
+            var datas = new List<KeyValuePair<long, DateTime>>();
+            var tasks = new List<Task>();
+            foreach (var i in Enumerable.Range(0, 100))
+            {
+                datas.Add(new KeyValuePair<long, DateTime>(i, start.AddSeconds(i)));
+            }
+            await tsClient.AddAsync(datas.ToArray());
+
+            var r = await tsClient.AllAsync(start);
+            Assert.Equal(100, r.Length);
+            foreach (var i in Enumerable.Range(0, 99))
+            {
+                Assert.Equal(i, r[i].value);
+                Assert.Equal(start.AddSeconds(i).ToRoundedTimestamp(60 * 1000), r[i].ts);
+            }
+
+        }
     }
 }

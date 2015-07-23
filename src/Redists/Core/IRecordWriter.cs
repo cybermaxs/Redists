@@ -5,6 +5,6 @@ namespace Redists.Core
 {
     interface IRecordWriter
     {
-        Task<long> AppendAsync(string redisKey, Record record);
+        Task<long> AppendAsync(string redisKey, params Record[] record);
     }
 }

@@ -6,6 +6,6 @@ namespace Redists.Core
     {
         Record Deserialize(string rawRecord);
         Record[] ParseRawString(string raw);
-        string Serialize(Record record);
+        string Serialize(params Record[] record);
     }
 }

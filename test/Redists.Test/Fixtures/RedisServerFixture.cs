@@ -10,17 +10,25 @@ namespace Redists.Test.Fixtures
         private Process server;
         private ConnectionMultiplexer mux;
 
+        private bool wasStarted = false;
+
         public RedisServerFixture()
         {
-            if(!IsRunning)
+            if (!IsRunning)
+            {
                 this.server = Process.Start(@"..\..\..\..\packages\Redis-64.2.8.21\redis-server.exe");
+                wasStarted = true;
+            }
 
             this.mux = ConnectionMultiplexer.Connect("localhost:6379,allowAdmin=true");
         }
 
         public void Dispose()
         {
-            if (server!=null && !server.HasExited)
+            if (this.mux != null && this.mux.IsConnected)
+                this.mux.Close(false);
+
+            if (server != null && !server.HasExited && wasStarted)
                 server.Kill();
         }
 

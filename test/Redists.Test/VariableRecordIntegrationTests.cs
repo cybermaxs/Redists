@@ -1,13 +1,13 @@
 ﻿using Ploeh.AutoFixture;
+using Redists.Configuration;
+using Redists.Extensions;
 using Redists.Test.Fixtures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
-using Redists.Extensions;
-using System.Threading;
-using Redists.Configuration;
 
 namespace Redists.Test
 {
@@ -26,7 +26,7 @@ namespace Redists.Test
 
         [Fact]
         [Trait("Category", "Integration")]
-        public async Task Sequence()
+        public async Task UniqueSerie()
         {
             var start = DateTime.UtcNow.Date;
 
@@ -44,25 +44,44 @@ namespace Redists.Test
                 Assert.Equal(i, r[i].value);
                 Assert.Equal(start.AddSeconds(i).ToRoundedTimestamp(60*1000), r[i].ts);
             }
-
         }
 
         [Fact]
         [Trait("Category", "Integration")]
-        public async Task Multi()
+        public async Task Multi_Serie()
         {
             var now = DateTime.UtcNow;
 
             var tasks = new List<Task>();
             foreach (var i in Enumerable.Range(1, 1000))
-            {
                 tasks.Add(tsClient.AddAsync(1, now));
-                Thread.Sleep(10);
-            }
             await Task.WhenAll(tasks);
 
             var r = await tsClient.AllAsync(now);
             Assert.Equal(1000, r.Length);
+        }
+
+        [Fact]
+        [Trait("Category", "Integration")]
+        public async Task Batch()
+        {
+            var start = DateTime.UtcNow.Date;
+            var datas = new List<KeyValuePair<long, DateTime>>();
+            var tasks = new List<Task>();
+            foreach (var i in Enumerable.Range(0, 100))
+            {
+                datas.Add(new KeyValuePair<long, DateTime>(i, start.AddSeconds(i)));
+            }
+            await tsClient.AddAsync(datas.ToArray());
+
+            var r = await tsClient.AllAsync(start);
+            Assert.Equal(100, r.Length);
+            foreach (var i in Enumerable.Range(0, 99))
+            {
+                Assert.Equal(i, r[i].value);
+                Assert.Equal(start.AddSeconds(i).ToRoundedTimestamp(60 * 1000), r[i].ts);
+            }
+
         }
     }
 }

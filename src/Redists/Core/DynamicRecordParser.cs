@@ -21,7 +21,24 @@ namespace Redists.Core
             return new Record(ts, value);
         }
 
-        public string Serialize(Record record)
+        public string Serialize(params Record[] records)
+        {
+            if (records == null || records.Count() == 0)
+                return string.Empty;
+
+            return string.Join(Constants.InterRecordDelimiter.ToString(), records.Select(r => this.SerializeInternal(r)).ToArray());
+        }
+
+        #endregion
+
+        #region privates
+        private Record[] ParseDynamic(string raw)
+        {
+            var parts = raw.Split(new char[] { Constants.InterRecordDelimiter }, StringSplitOptions.RemoveEmptyEntries);
+            return parts.Select(p => Deserialize(p)).ToArray();
+        }
+
+        private string SerializeInternal(Record record)
         {
             if (record == Record.Empty)
                 return string.Empty;
@@ -30,14 +47,6 @@ namespace Redists.Core
             var stringValue = record.value.ToString();
 
             return stringTs + Constants.IntraRecordDelimiter + stringValue;
-        }
-        #endregion
-
-        #region privates
-        private Record[] ParseDynamic(string raw)
-        {
-            var parts = raw.Split(new char[] { Constants.InterRecordDelimiter }, StringSplitOptions.RemoveEmptyEntries);
-            return parts.Select(p => Deserialize(p)).ToArray();
         }
         #endregion
 

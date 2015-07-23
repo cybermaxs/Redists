@@ -20,10 +20,10 @@ namespace Redists.Core
             this.ttl = ttl;
         }
 
-        public Task<long> AppendAsync(string redisKey, Record record)
+        public Task<long> AppendAsync(string redisKey, params Record[] records)
         {
             ManageKeyExpiration(redisKey);
-            var toAppend = parser.Serialize(record) + Constants.InterRecordDelimiter;
+            var toAppend = parser.Serialize(records) + Constants.InterRecordDelimiter;
             return this.dbAsync.StringAppendAsync(redisKey, toAppend);
         }
 
