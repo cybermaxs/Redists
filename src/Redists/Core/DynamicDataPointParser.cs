@@ -12,7 +12,7 @@ namespace Redists.Core
         }
         public DataPoint Deserialize(string rawDataPoint)
         {
-            var parts = rawDataPoint.Split(Constants.IntraDelimiter);
+            var parts = rawDataPoint.Split(new string[] { Constants.IntraDelimiter }, StringSplitOptions.RemoveEmptyEntries);
             long ts;
             long value;
             long.TryParse(parts[0], out ts);
@@ -23,7 +23,7 @@ namespace Redists.Core
 
         public string Serialize(params DataPoint[] dataPoint)
         {
-            return string.Join(Constants.InterDelimiter.ToString(), dataPoint.Select(r => this.SerializeInternal(r)).ToArray());
+            return string.Join(Constants.InterDelimiter, dataPoint.Select(r => this.SerializeInternal(r)).ToArray());
         }
 
         #endregion
@@ -31,7 +31,7 @@ namespace Redists.Core
         #region privates
         private DataPoint[] ParseDynamic(string raw)
         {
-            var parts = raw.Split(new char[] { Constants.InterDelimiter }, StringSplitOptions.RemoveEmptyEntries);
+            var parts = raw.Split(new string[] { Constants.InterDelimiter }, StringSplitOptions.RemoveEmptyEntries);
             return parts.Select(p => Deserialize(p)).ToArray();
         }
 

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Diagnostics;
 using StackExchange.Redis;
+using System.Threading;
 
 namespace Redists.Test.Fixtures
 {
@@ -19,7 +20,7 @@ namespace Redists.Test.Fixtures
                 this.server = Process.Start(@"..\..\..\..\packages\Redis-64.2.8.21\redis-server.exe");
                 wasStarted = true;
             }
-
+            Thread.Sleep(1000);
             this.mux = ConnectionMultiplexer.Connect("localhost:6379,allowAdmin=true");
         }
 

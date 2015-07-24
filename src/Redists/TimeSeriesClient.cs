@@ -71,7 +71,7 @@ namespace Redists
 
         private string GetRedisKeyName(long ts)
         {
-            return "ts#" + this.name + "#" + ts.Normalize(this.settings.KeyNormFactor);
+            return "ts#" + this.name + "#" + ts.Normalize(this.settings.KeyNormFactor).ToString();
         }
     }
 }

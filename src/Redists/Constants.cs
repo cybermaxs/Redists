@@ -5,9 +5,8 @@
     /// </summary>
     public class Constants
     {
-        public const char IntraDelimiter = ':';
-        public const char InterDelimiter = '#';
-        public const char PadChar = '0';
+        public const string IntraDelimiter = ":";
+        public const string InterDelimiter = "#";
         public const int BufferSize = 10000;
         public const string TsPrefix = "ts";
     }

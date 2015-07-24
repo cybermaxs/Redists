@@ -32,7 +32,7 @@ namespace Redists.Benchmarks
             var watcher = Stopwatch.StartNew();
 
             var tasks = new List<Task>();
-            foreach(var i in Enumerable.Range(1, 100000))
+            foreach(var i in Enumerable.Range(1, 5000))
             {
                 tasks.Add(client.AddAsync(gen.Next(), DateTime.UtcNow));
             }

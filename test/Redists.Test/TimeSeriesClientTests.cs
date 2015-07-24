@@ -16,6 +16,7 @@ namespace Redists.Test
             
             //TimeSeriesClient client = new TimeSeriesClient("foobar", new TimeSeriesOptions(20, 10, false, null), );
             //DataPoint p = new DataPoint(123, 456);
+            Assert.Equal("0003", 3.ToString("D4"));
            
         }
     }

@@ -20,7 +20,7 @@ namespace Redists.Test
         {
             this.fixture = new Fixture();
             redisServer.Reset();
-            tsClient = TimeSeriesFactory.New(redisServer.GetDatabase(0), "myts", new TimeSeriesOptions(3600*1000, 60*1000, false, TimeSpan.FromHours(1)));
+            tsClient = TimeSeriesFactory.New(redisServer.GetDatabase(0), "myts", new TimeSeriesOptions(3600*1000, 1000, false, TimeSpan.FromHours(1)));
         }
 
         [Fact]
@@ -41,7 +41,7 @@ namespace Redists.Test
             foreach (var i in Enumerable.Range(0, 3599))
             {
                 Assert.Equal(i, r[i].value);
-                Assert.Equal(start.AddSeconds(i).ToRoundedTimestamp(60*1000), r[i].ts);
+                Assert.Equal(start.AddSeconds(i).ToRoundedTimestamp(1000), r[i].ts);
             }
         }
 
@@ -52,7 +52,7 @@ namespace Redists.Test
             var now = DateTime.UtcNow;
 
             var tasks = new List<Task>();
-            foreach (var i in Enumerable.Range(1, 100000))
+            foreach (var i in Enumerable.Range(1, 10000))
                 tasks.Add(tsClient.AddAsync(1, now));
             await Task.WhenAll(tasks);
 
@@ -77,8 +77,9 @@ namespace Redists.Test
             Assert.Equal(100, r.Length);
             foreach (var i in Enumerable.Range(0, 99))
             {
-                Assert.Equal(i, r[i].value);
-                Assert.Equal(start.AddSeconds(i).ToRoundedTimestamp(60 * 1000), r[i].ts);
+                var current = r[i];
+                Assert.Equal(i, current.value);
+                Assert.Equal(start.AddSeconds(i).ToRoundedTimestamp(1000), current.ts);
             }
 
         }

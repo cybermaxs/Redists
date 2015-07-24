@@ -23,7 +23,7 @@ namespace Redists.Core
             while ( (partialRaw = await ReadBlockAsync(redisKey, cursor).ConfigureAwait(false))!=string.Empty)
             {
                 var lastindex = partialRaw.LastIndexOf(Constants.InterDelimiter);
-                var partialRawStrict = partialRaw[partialRaw.Length-1]!=Constants.InterDelimiter ? partialRaw.Remove(lastindex + 1) : partialRaw;
+                var partialRawStrict = partialRaw[partialRaw.Length-1]!=Constants.InterDelimiter[0] ? partialRaw.Remove(lastindex + 1) : partialRaw;
 
                 dataPoints.AddRange(parser.ParseRawString(partialRawStrict));
                 cursor += partialRawStrict.Length;

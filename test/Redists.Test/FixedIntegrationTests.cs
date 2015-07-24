@@ -20,7 +20,7 @@ namespace Redists.Test
         {
             this.fixture = new Fixture();
             redisServer.Reset();
-            tsClient = TimeSeriesFactory.New(redisServer.GetDatabase(0), "myts", new TimeSeriesOptions(3600*1000, 60*1000, true, TimeSpan.FromHours(1)));
+            tsClient = TimeSeriesFactory.New(redisServer.GetDatabase(0), "myts", new TimeSeriesOptions(3600*1000, 1000, true, TimeSpan.FromHours(1)));
         }
 
         [Fact]
@@ -41,7 +41,7 @@ namespace Redists.Test
             foreach (var i in Enumerable.Range(0, 3599))
             {
                 Assert.Equal(i, r[i].value);
-                Assert.Equal(start.AddSeconds(i).ToRoundedTimestamp(60*1000), r[i].ts);
+                Assert.Equal(start.AddSeconds(i).ToRoundedTimestamp(1000), r[i].ts);
             }
 
         }
@@ -79,7 +79,7 @@ namespace Redists.Test
             foreach (var i in Enumerable.Range(0, 99))
             {
                 Assert.Equal(i, r[i].value);
-                Assert.Equal(start.AddSeconds(i).ToRoundedTimestamp(60 * 1000), r[i].ts);
+                Assert.Equal(start.AddSeconds(i).ToRoundedTimestamp(1000), r[i].ts);
             }
 
         }
