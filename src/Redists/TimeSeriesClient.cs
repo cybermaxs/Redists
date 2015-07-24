@@ -9,15 +9,15 @@ using Redists.Configuration;
 
 namespace Redists
 {
-    internal class TimeSerie : ITimeSerie
+    internal class TimeSeriesClient : ITimeSeriesClient
     {
         private readonly string name;
-        private readonly TimeSerieSettings settings;
+        private readonly TimeSeriesOptions settings;
 
         private readonly IRecordWriter writer;
         private readonly IRecordReader reader;
 
-        public TimeSerie(string name, TimeSerieSettings settings, IRecordReader reader, IRecordWriter writer)
+        public TimeSeriesClient(string name, TimeSeriesOptions settings, IRecordReader reader, IRecordWriter writer)
         {
             this.name = name;
             this.settings = settings;

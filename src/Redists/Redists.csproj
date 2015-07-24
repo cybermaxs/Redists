@@ -48,12 +48,12 @@
     <Compile Include="Core\RecordWriter.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
     <Compile Include="Extensions\Int64Extensions.cs" />
-    <Compile Include="ITimeSerie.cs" />
+    <Compile Include="ITimeSeriesClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Record.cs" />
-    <Compile Include="TimeSerie.cs" />
-    <Compile Include="TimeSerieFactory.cs" />
-    <Compile Include="Configuration\TimeSerieSettings.cs" />
+    <Compile Include="TimeSeriesClient.cs" />
+    <Compile Include="TimeSeriesFactory.cs" />
+    <Compile Include="Configuration\TimeSeriesOptions.cs" />
     <Compile Include="Utils\Guard.cs" />
   </ItemGroup>
   <ItemGroup>

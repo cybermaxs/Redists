@@ -7,9 +7,9 @@ using Redists.Configuration;
 
 namespace Redists
 {
-    public static class TimeSerieFactory
+    public static class TimeSeriesFactory
     {
-        public static ITimeSerie New(IDatabaseAsync dbAsync, string name, TimeSerieSettings settings = null)
+        public static ITimeSeriesClient New(IDatabaseAsync dbAsync, string name, TimeSeriesOptions settings = null)
         {
             Guard.NotNull(dbAsync, "dbAsync");
             Guard.NotNullOrEmpty(name, "name");
@@ -17,13 +17,13 @@ namespace Redists
             if (dbAsync.Multiplexer==null || !dbAsync.Multiplexer.IsConnected)
                 throw new InvalidOperationException("redis connection is not open");
 
-            settings = settings ?? new TimeSerieSettings();
+            settings = settings ?? new TimeSeriesOptions();
 
             var parser = settings.UseFixedRecordSize ? (IRecordParser)new FixedRecordParser() : new DynamicRecordParser();
             var reader = new RecordReader(dbAsync, parser);
             var writer = new RecordWriter(dbAsync, parser, settings.Ttl);
 
-            return new TimeSerie(name, settings, reader, writer);
+            return new TimeSeriesClient(name, settings, reader, writer);
         }
     }
 }

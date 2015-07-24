@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Redists
 {
-    public interface ITimeSerie
+    public interface ITimeSeriesClient
     {
         Task AddAsync(long value, DateTime at);
         Task AddAsync(KeyValuePair<long, DateTime>[] datas);

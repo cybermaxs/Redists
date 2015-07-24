@@ -14,13 +14,13 @@ namespace Redists.Test
     public class VariableRecordIntegrationTests
     {
         private Fixture fixture;
-        private ITimeSerie tsClient;
+        private ITimeSeriesClient tsClient;
 
         public VariableRecordIntegrationTests(RedisServerFixture redisServer)
         {
             this.fixture = new Fixture();
             redisServer.Reset();
-            tsClient = TimeSerieFactory.New(redisServer.GetDatabase(0), "myts", new TimeSerieSettings(3600*1000, 60*1000, true, TimeSpan.FromHours(1)));
+            tsClient = TimeSeriesFactory.New(redisServer.GetDatabase(0), "myts", new TimeSeriesOptions(3600*1000, 60*1000, true, TimeSpan.FromHours(1)));
         }
 
         [Fact]

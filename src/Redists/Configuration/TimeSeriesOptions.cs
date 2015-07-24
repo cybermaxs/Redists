@@ -5,7 +5,7 @@ namespace Redists.Configuration
     /// <summary>
     /// Various settings to configure a timeseries.
     /// </summary>
-    public class TimeSerieSettings
+    public class TimeSeriesOptions
     {
         /// <summary>
         /// Partition key factor for a Serie (Milliseconds).
@@ -26,7 +26,7 @@ namespace Redists.Configuration
         /// </summary>
         public bool UseFixedRecordSize { get; private set; }
 
-        public TimeSerieSettings(long serieNormalizeFactor = 3600*1000, long recordNormalizeFactor = 1000, bool useFixedRecordSize = false, TimeSpan? serieTtl = null)
+        public TimeSeriesOptions(long serieNormalizeFactor = 3600*1000, long recordNormalizeFactor = 1000, bool useFixedRecordSize = false, TimeSpan? serieTtl = null)
         {
             if (serieNormalizeFactor < recordNormalizeFactor)
                 throw new InvalidOperationException("serieNormalizeFactor should be greater than recordNormalizeFactor");    
