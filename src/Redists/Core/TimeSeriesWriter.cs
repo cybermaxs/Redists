@@ -29,6 +29,9 @@ namespace Redists.Core
 
         private void ManageKeyExpiration(string key)
         {
+            if (!this.ttl.HasValue)
+                return;
+
             DateTime lastSent=expirations.GetOrAdd(key, DateTime.MinValue);
             if ((DateTime.UtcNow- lastSent)> this.ttl.Value)
             {
