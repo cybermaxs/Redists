@@ -15,26 +15,36 @@ namespace Redists.Configuration
         /// <summary>
         /// TimeToLive for a Serie (Milliseconds).
         /// </summary>
-        public TimeSpan? Ttl { get; private set; }
+        public TimeSpan? KeyTtl { get; private set; }
         /// <summary>
         /// Normalization factor for each data point (Milliseconds).
         /// </summary>
-        public long RecordNormFactor { get; private set; }
+        public long DataPointNormFactor { get; private set; }
         /// <summary>
-        /// Use fixed size for each record ?
+        /// Use fixed size for each data point ?
         /// default is 29 (timestamp in ms + delimiter + long)
         /// </summary>
-        public bool UseFixedRecordSize { get; private set; }
+        public bool UseFixedSize { get; private set; }
 
-        public TimeSeriesOptions(long serieNormalizeFactor = 3600*1000, long recordNormalizeFactor = 1000, bool useFixedRecordSize = false, TimeSpan? serieTtl = null)
+        /// <summary>
+        /// Default Constructor.
+        /// </summary>
+        /// <param name="keyNormalizationFactor">Key normalization factor (ms)</param>
+        /// <param name="dataPointNormalizationFactor">Data point normalization factor (ms)</param>
+        /// <param name="useFixedSize">Fixed or dynamic dataPoint size</param>
+        /// <param name="keyTtl">Key Ttl value</param>
+        public TimeSeriesOptions(long keyNormalizationFactor, long dataPointNormalizationFactor, bool useFixedSize, TimeSpan? keyTtl)
         {
-            if (serieNormalizeFactor < recordNormalizeFactor)
-                throw new InvalidOperationException("serieNormalizeFactor should be greater than recordNormalizeFactor");    
+            if (keyNormalizationFactor < dataPointNormalizationFactor)
+                throw new InvalidOperationException("keyNormalizationFactor should be greater than dataPointNormalizationFactor");
 
-            this.KeyNormFactor = serieNormalizeFactor;
-            this.Ttl = serieTtl;
-            this.RecordNormFactor = recordNormalizeFactor;
-            this.UseFixedRecordSize = useFixedRecordSize;
+            if (keyTtl.HasValue && keyTtl.Value.TotalMilliseconds < keyNormalizationFactor)
+                throw new InvalidOperationException("keyTtl should be greater than keyNormalizationFactor");
+
+            this.KeyNormFactor = keyNormalizationFactor;
+            this.KeyTtl = keyTtl;
+            this.DataPointNormFactor = dataPointNormalizationFactor;
+            this.UseFixedSize = useFixedSize;
         }
     }
 }

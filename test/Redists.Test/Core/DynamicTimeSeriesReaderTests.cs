@@ -9,20 +9,20 @@ using Xunit;
 
 namespace Redists.Test.Core
 {
-    public class FixedRecordReaderTests
+    public class DynamicTimeSeriesReaderTests
     {
-        private readonly RecordReader reader;
+        private readonly TimeSeriesReader reader;
         private Fixture fixture = new Fixture();
         private Mock<IDatabase> mockOfDb;
 
-        public FixedRecordReaderTests()
+         public DynamicTimeSeriesReaderTests()
         {
             mockOfDb = new Mock<IDatabase>();
             mockOfDb.Setup(db => db.StringGetRangeAsync("short", It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CommandFlags>())).ReturnsAsync(Generate(100));
             mockOfDb.Setup(db => db.StringGetRangeAsync("long", It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CommandFlags>())).Returns<RedisKey, long, long, CommandFlags>(this.GeneratePartial5000);
             mockOfDb.Setup(db => db.StringGetRangeAsync("broken", It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CommandFlags>())).Returns<RedisKey, long, long, CommandFlags>(this.GeneratePartial5000);
-            var parser = new FixedRecordParser();
-            reader = new RecordReader(mockOfDb.Object, parser);
+            var parser = new DynamicDataPointParser();
+            reader = new TimeSeriesReader(mockOfDb.Object, parser);
         }
 
         [Fact]
@@ -34,8 +34,8 @@ namespace Redists.Test.Core
             t.Wait();
             Assert.False(t.IsFaulted);
             Assert.False(t.IsCanceled);
-            var records = t.Result;
-            Assert.Equal(100, records.Length);
+            var dataPoints = t.Result;
+            Assert.Equal(100, dataPoints.Length);
 
             mockOfDb.Verify(db => db.StringGetRangeAsync("short", It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CommandFlags>()), Times.Once);
         }
@@ -49,8 +49,8 @@ namespace Redists.Test.Core
             t.Wait();
             Assert.False(t.IsFaulted);
             Assert.False(t.IsCanceled);
-            var records = t.Result;
-            Assert.Equal(5000, records.Length);
+            var dataPoints = t.Result;
+            Assert.Equal(5000, dataPoints.Length);
 
             mockOfDb.Verify(db => db.StringGetRangeAsync("long", It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CommandFlags>()), Times.AtLeastOnce);
         }
@@ -64,8 +64,8 @@ namespace Redists.Test.Core
             t.Wait();
             Assert.False(t.IsFaulted);
             Assert.False(t.IsCanceled);
-            var records = t.Result;
-            Assert.Equal(5000, records.Length);
+            var dataPoints = t.Result;
+            Assert.Equal(5000, dataPoints.Length);
 
             mockOfDb.Verify(db => db.StringGetRangeAsync("broken", It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CommandFlags>()), Times.AtLeastOnce);
         }
@@ -73,23 +73,21 @@ namespace Redists.Test.Core
         #region Privates
         private string Generate(int nbItems=100)
         {
-            FixedRecordParser parser = new FixedRecordParser();
             StringBuilder builder = new StringBuilder();
             foreach (var i in Enumerable.Range(1, nbItems))
             {
-                builder.Append(parser.Serialize(new Record(10000+i,i))+Constants.InterRecordDelimiter);
+                builder.Append((10000 + i) + ":" + i + Constants.InterDelimiter);
             }
             return builder.ToString();
         }
 
         private Task<RedisValue> GeneratePartial5000(RedisKey k, long start, long end, CommandFlags _)
         {
-            FixedRecordParser parser = new FixedRecordParser();
             //generate data
             StringBuilder builder = new StringBuilder();
             foreach (var i in Enumerable.Range(1, 5000))
             {
-                builder.Append(parser.Serialize(new Record(10000 + i, i)) + Constants.InterRecordDelimiter);
+                builder.Append((5000 + i) + ":" + i + Constants.InterDelimiter);
             }
             var all = builder.ToString();
 

@@ -1,11 +1,10 @@
-﻿using Redists.Core;
+﻿using Redists.Configuration;
+using Redists.Core;
 using Redists.Extensions;
-using StackExchange.Redis;
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using Redists.Configuration;
 
 namespace Redists
 {
@@ -13,11 +12,10 @@ namespace Redists
     {
         private readonly string name;
         private readonly TimeSeriesOptions settings;
+        private readonly ITimeSeriesWriter writer;
+        private readonly ITimeSeriesReader reader;
 
-        private readonly IRecordWriter writer;
-        private readonly IRecordReader reader;
-
-        public TimeSeriesClient(string name, TimeSeriesOptions settings, IRecordReader reader, IRecordWriter writer)
+        public TimeSeriesClient(string name, TimeSeriesOptions settings, ITimeSeriesReader reader, ITimeSeriesWriter writer)
         {
             this.name = name;
             this.settings = settings;
@@ -28,46 +26,52 @@ namespace Redists
 
         public Task AddAsync(long value, DateTime at)
         {
-            var tsKey = this.GetRedisKeyName(at);
-            var ts = at.ToRoundedTimestamp(this.settings.RecordNormFactor);
-            var newRecord = new Record(ts, value);
-
-            return writer.AppendAsync(tsKey, newRecord);
+            var newDataPoint = new DataPoint(at, value);
+            newDataPoint.Normalize(this.settings.DataPointNormFactor);
+            var key = this.GetRedisKeyName(newDataPoint.ts);
+            return writer.AppendAsync(key, newDataPoint);
         }
 
-        public Task AddAsync(KeyValuePair<long, DateTime>[] datas)
+        public Task AddAsync(IEnumerable<DataPoint> dataPoints)
         {
+            if (dataPoints == null || dataPoints.Count() == 0)
+                return Task.FromResult<object>(null);
+
             var tasks = new List<Task>();
-            foreach (var serie in datas.GroupBy(k=>this.GetRedisKeyName(k.Value)))
+
+            //normalize all dataPoints first
+            foreach (var dataPoint in dataPoints)
+            {
+                dataPoint.Normalize(this.settings.DataPointNormFactor);
+            }
+
+            //group by time series
+            foreach (var serie in dataPoints.GroupBy(k => this.GetRedisKeyName(k.ts)))
             {
                 var tsKey = serie.Key;
-                tasks.Add(writer.AppendAsync(tsKey, serie.Select(k =>
-                {
-                    var ts = k.Value.ToRoundedTimestamp(this.settings.RecordNormFactor);
-                    return new Record(ts, k.Key);
-                }).ToArray()));
+                tasks.Add(writer.AppendAsync(tsKey, serie.ToArray()));
             }
             return Task.WhenAll(tasks.ToArray());
         }
 
-        public async Task<Record[]> AllAsync(DateTime at)
+        public async Task<DataPoint[]> AllAsync(DateTime from, DateTime? to = null)
         {
-            var dts = at.ToKeyDateTimes(DateTime.UtcNow, this.settings.KeyNormFactor);
+            var dts = from.ToKeyDateTimes(to ?? DateTime.UtcNow, this.settings.KeyNormFactor);
 
-            var tasks = new List<Task<Record[]>>();
+            var tasks = new List<Task<DataPoint[]>>();
 
-            foreach(var dt in dts)
+            foreach (var dt in dts)
             {
-                var tsKey = this.GetRedisKeyName(dt);
+                var tsKey = this.GetRedisKeyName(dt.ToTimestamp());
                 tasks.Add(reader.ReadAllAsync(tsKey));
             }
             await Task.WhenAll(tasks.ToArray());
             return tasks.SelectMany(t => t.Result).ToArray();
         }
 
-        public string GetRedisKeyName(DateTime at)
+        private string GetRedisKeyName(long ts)
         {
-            return "ts#" + this.name + "#" + at.ToRoundedTimestamp(this.settings.KeyNormFactor);
+            return "ts#" + this.name + "#" + ts.Normalize(this.settings.KeyNormFactor);
         }
     }
 }

@@ -5,25 +5,25 @@ using System.Threading.Tasks;
 
 namespace Redists.Core
 {
-    internal class RecordWriter : IRecordWriter
+    internal class TimeSeriesWriter : ITimeSeriesWriter
     {
         private readonly IDatabaseAsync dbAsync;
         private TimeSpan? ttl;
-        private IRecordParser parser;
+        private IDataPointParser parser;
 
         private ConcurrentDictionary<string, DateTime> expirations = new ConcurrentDictionary<string, DateTime>();
 
-        public RecordWriter(IDatabaseAsync dbAsync, IRecordParser parser, TimeSpan? ttl)
+        public TimeSeriesWriter(IDatabaseAsync dbAsync, IDataPointParser parser, TimeSpan? ttl)
         {
             this.dbAsync = dbAsync;
             this.parser = parser;
             this.ttl = ttl;
         }
 
-        public Task<long> AppendAsync(string redisKey, params Record[] records)
+        public Task<long> AppendAsync(string redisKey, params DataPoint[] dataPoints)
         {
             ManageKeyExpiration(redisKey);
-            var toAppend = parser.Serialize(records) + Constants.InterRecordDelimiter;
+            var toAppend = parser.Serialize(dataPoints) + Constants.InterDelimiter;
             return this.dbAsync.StringAppendAsync(redisKey, toAppend);
         }
 

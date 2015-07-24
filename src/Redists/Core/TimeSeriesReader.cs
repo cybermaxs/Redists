@@ -4,35 +4,35 @@ using System.Threading.Tasks;
 
 namespace Redists.Core
 {
-    internal class RecordReader : IRecordReader
+    internal class TimeSeriesReader : ITimeSeriesReader
     {
         private readonly IDatabaseAsync dbAsync;
-        private readonly IRecordParser parser;
-        public RecordReader(IDatabaseAsync dbAsync, IRecordParser parser)
+        private readonly IDataPointParser parser;
+        public TimeSeriesReader(IDatabaseAsync dbAsync, IDataPointParser parser)
         {
             this.dbAsync = dbAsync;
             this.parser = parser;
         }
 
-        public async Task<Record[]> ReadAllAsync(string redisKey)
+        public async Task<DataPoint[]> ReadAllAsync(string redisKey)
         {
             ///read by batch
-            List<Record> records = new List<Record>();
+            List<DataPoint> dataPoints = new List<DataPoint>();
             string partialRaw = string.Empty;
             int cursor = 0;
             while ( (partialRaw = await ReadBlockAsync(redisKey, cursor).ConfigureAwait(false))!=string.Empty)
             {
-                var lastindex = partialRaw.LastIndexOf(Constants.InterRecordDelimiter);
-                var partialRawStrict = partialRaw[partialRaw.Length-1]!=Constants.InterRecordDelimiter ? partialRaw.Remove(lastindex + 1) : partialRaw;
+                var lastindex = partialRaw.LastIndexOf(Constants.InterDelimiter);
+                var partialRawStrict = partialRaw[partialRaw.Length-1]!=Constants.InterDelimiter ? partialRaw.Remove(lastindex + 1) : partialRaw;
 
-                records.AddRange(parser.ParseRawString(partialRawStrict));
+                dataPoints.AddRange(parser.ParseRawString(partialRawStrict));
                 cursor += partialRawStrict.Length;
 
                 if (partialRaw.Length < Constants.BufferSize)
                     break;
             }
 
-            return records.ToArray();
+            return dataPoints.ToArray();
         }
 
         private async Task<string> ReadBlockAsync(string redisKey, int start)

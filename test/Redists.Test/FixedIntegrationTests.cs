@@ -11,12 +11,12 @@ using Redists.Configuration;
 namespace Redists.Test
 {
     [Collection("RedisServer")]
-    public class VariableRecordIntegrationTests
+    public class VariableIntegrationTests
     {
         private Fixture fixture;
         private ITimeSeriesClient tsClient;
 
-        public VariableRecordIntegrationTests(RedisServerFixture redisServer)
+        public VariableIntegrationTests(RedisServerFixture redisServer)
         {
             this.fixture = new Fixture();
             redisServer.Reset();
@@ -66,11 +66,11 @@ namespace Redists.Test
         public async Task Batch()
         {
             var start = DateTime.UtcNow.Date;
-            var datas = new List<KeyValuePair<long, DateTime>>();
+            var datas = new List<DataPoint>();
             var tasks = new List<Task>();
             foreach (var i in Enumerable.Range(0, 100))
             {
-                datas.Add(new KeyValuePair<long, DateTime>(i, start.AddSeconds(i)));
+                datas.Add(new DataPoint(start.AddSeconds(i), i));
             }
             await tsClient.AddAsync(datas.ToArray());
 

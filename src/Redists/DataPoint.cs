@@ -1,27 +1,39 @@
 ﻿using System;
+using Redists.Extensions;
 
 namespace Redists
 {
     /// <summary>
     /// Basic structure that represent a couple Key-Value
     /// </summary>
-    public struct Record
+    public struct DataPoint
     {
-        public static Record Empty = new Record();
+        public static DataPoint Empty = new DataPoint();
         public long ts;
         public long value;
 
-        public Record(long timeStamp, long value)
+        public DataPoint(long timeStamp, long value)
         {
             this.ts = timeStamp;
             this.value = value;
         }
 
-        public static bool operator ==(Record x, Record y)
+        public DataPoint(DateTime at, long value)
+        {
+            this.ts = at.ToTimestamp();
+            this.value = value;
+        }
+
+        public void Normalize(long factor)
+        {
+            this.ts=this.ts.Normalize(factor);
+        }
+
+        public static bool operator ==(DataPoint x, DataPoint y)
         {
             return x.ts == y.ts && x.value == y.value;
         }
-        public static bool operator !=(Record x, Record y)
+        public static bool operator !=(DataPoint x, DataPoint y)
         {
             return !(x == y);
         }
@@ -31,7 +43,7 @@ namespace Redists
         {
             if (obj == null || GetType() != obj.GetType())
                 return false;
-            Record r = (Record)obj;
+            DataPoint r = (DataPoint)obj;
             return (ts == r.ts) && (value == r.value);
         }
 

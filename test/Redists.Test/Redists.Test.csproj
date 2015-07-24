@@ -61,20 +61,23 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\FixedRecordReaderTests.cs" />
-    <Compile Include="Core\DynamicRecordReaderTests.cs" />
-    <Compile Include="Core\DynamicRecordWriterTests.cs" />
-    <Compile Include="Core\FixedRecordWriterTests.cs" />
-    <Compile Include="Core\DynamicRecordParserTests.cs" />
-    <Compile Include="Core\FixedRecordParserTests.cs" />
+    <Compile Include="Configuration\TimeSeriesOptionsTests.cs" />
+    <Compile Include="Core\FixedTimeSeriesReaderTests.cs" />
+    <Compile Include="Core\DynamicTimeSeriesReaderTests.cs" />
+    <Compile Include="Core\DynamicTimeSeriesWriterTests.cs" />
+    <Compile Include="Core\FixedTimeSeriesWriterTests.cs" />
+    <Compile Include="Core\DynamicDataPointParserTests.cs" />
+    <Compile Include="Core\FixedDataPointParserTests.cs" />
     <Compile Include="Extensions\DateTimeExtensionsTests.cs" />
     <Compile Include="Extensions\Int64ExtensionsTests.cs" />
     <Compile Include="Fixtures\RedisCollection.cs" />
-    <Compile Include="VariableRecordIntegrationTests.cs" />
-    <Compile Include="FixedRecordIntegrationTests.cs" />
+    <Compile Include="TimeSeriesClientTests.cs" />
+    <Compile Include="TimeSeriesFactoryTests.cs" />
+    <Compile Include="VariableIntegrationTests.cs" />
+    <Compile Include="FixedIntegrationTests.cs" />
     <Compile Include="Fixtures\RedisServerFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RecordTests.cs" />
+    <Compile Include="DataPointTests.cs" />
     <Compile Include="Utils\GuardTests.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -7,27 +7,27 @@ using Xunit;
 
 namespace Redists.Test.Core
 {
-    public class FixedRecordWriterTests
+    public class FixedTimeSeriesWriterTests
     {
-        private readonly RecordWriter writer;
+        private readonly TimeSeriesWriter writer;
         private Fixture fixture = new Fixture();
         private Mock<IDatabase> mockOfDb;
 
-        public FixedRecordWriterTests()
+        public FixedTimeSeriesWriterTests()
         {
             mockOfDb = new Mock<IDatabase>();
             mockOfDb.Setup(db => db.StringAppendAsync(It.IsAny<string>(), It.IsAny<RedisValue>(), It.IsAny<CommandFlags>())).ReturnsAsync(10);
-            var parser = new FixedRecordParser();
+            var parser = new FixedDataPointParser();
 
-            writer = new RecordWriter(mockOfDb.Object, parser, TimeSpan.MaxValue);
+            writer = new TimeSeriesWriter(mockOfDb.Object, parser, TimeSpan.MaxValue);
         }
 
         [Fact]
         public void WriteShouldPass()
         {
             var key = this.fixture.Create<string>();
-            var record = new Record(123, 456);
-            var t = writer.AppendAsync(key, record);
+            var dataPoint = new DataPoint(123, 456);
+            var t = writer.AppendAsync(key, dataPoint);
 
             Assert.NotNull(t);
             t.Wait();

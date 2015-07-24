@@ -5,19 +5,18 @@ using Redists.Test.Fixtures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace Redists.Test
 {
     [Collection("RedisServer")]
-    public class FixedRecordsTests
+    public class FixedIntegrationTests
     {
         private Fixture fixture;
         private ITimeSeriesClient tsClient;
 
-        public FixedRecordsTests(RedisServerFixture redisServer)
+        public FixedIntegrationTests(RedisServerFixture redisServer)
         {
             this.fixture = new Fixture();
             redisServer.Reset();
@@ -66,11 +65,11 @@ namespace Redists.Test
         public async Task Batch()
         {
             var start = DateTime.UtcNow.Date;
-            var datas = new List<KeyValuePair<long, DateTime>>();
+            var datas = new List<DataPoint>();
             var tasks = new List<Task>();
             foreach (var i in Enumerable.Range(0, 100))
             {
-                datas.Add(new KeyValuePair<long, DateTime>(i, start.AddSeconds(i)));
+                datas.Add(new DataPoint(start.AddSeconds(i), i));
             }
             await tsClient.AddAsync(datas.ToArray());
 
