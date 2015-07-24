@@ -52,12 +52,12 @@ namespace Redists.Test
             var now = DateTime.UtcNow;
 
             var tasks = new List<Task>();
-            foreach (var i in Enumerable.Range(1, 1000))
+            foreach (var i in Enumerable.Range(1, 100000))
                 tasks.Add(tsClient.AddAsync(1, now));
             await Task.WhenAll(tasks);
 
             var r = await tsClient.AllAsync(now);
-            Assert.Equal(1000, r.Length);
+            Assert.Equal(10000, r.Length);
         }
 
         [Fact]

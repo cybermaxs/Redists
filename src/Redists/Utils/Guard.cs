@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Redists.Utils
 {
-    public static class Guard
+    internal static class Guard
     {
         /// <summary>
         /// Ensures the value of the given <paramref name="argumentExpression"/> is not null.
