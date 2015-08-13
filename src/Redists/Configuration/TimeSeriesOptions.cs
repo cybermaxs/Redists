@@ -13,7 +13,7 @@ namespace Redists.Configuration
         /// </summary>
         public long KeyNormFactor { get; private set; }
         /// <summary>
-        /// TimeToLive for a Serie (Milliseconds).
+        /// TimeToLive for a TimeSeries (Milliseconds).
         /// </summary>
         public TimeSpan? KeyTtl { get; private set; }
         /// <summary>

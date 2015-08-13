@@ -6,8 +6,8 @@ namespace Redists
 {
     public interface ITimeSeriesClient
     {
-        Task AddAsync(long value, DateTime at);
-        Task AddAsync(IEnumerable<DataPoint> dataPoints);
+        Task AddAsync(DateTime at, long value);
+        Task AddAsync(params DataPoint[] dataPoints);
         Task<DataPoint[]> AllAsync(DateTime at, DateTime? to = null);
     }
 }

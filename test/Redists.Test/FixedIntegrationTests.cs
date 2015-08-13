@@ -32,7 +32,7 @@ namespace Redists.Test
             var tasks = new List<Task>();
             foreach (var i in Enumerable.Range(0, 3600))
             {
-                tasks.Add(tsClient.AddAsync(i, start.AddSeconds(i)));
+                tasks.Add(tsClient.AddAsync( start.AddSeconds(i), i));
             }
             await Task.WhenAll(tasks);
 
@@ -54,7 +54,7 @@ namespace Redists.Test
 
             var tasks = new List<Task>();
             foreach (var i in Enumerable.Range(1, 1000))
-                tasks.Add(tsClient.AddAsync(1, now));
+                tasks.Add(tsClient.AddAsync( now, 1));
             await Task.WhenAll(tasks);
 
             var r = await tsClient.AllAsync(now);

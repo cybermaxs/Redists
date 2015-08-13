@@ -24,17 +24,17 @@ namespace Redists
             this.writer = writer;
         }
 
-        public Task AddAsync(long value, DateTime at)
+        public Task AddAsync(DateTime at, long value)
         {
-            var newDataPoint = new DataPoint(at, value);
-            newDataPoint.Normalize(this.settings.DataPointNormFactor);
-            var key = this.GetRedisKeyName(newDataPoint.ts);
-            return writer.AppendAsync(key, newDataPoint);
+            var dataPoint = new DataPoint(at, value);
+            dataPoint.Normalize(this.settings.DataPointNormFactor);
+            var key = this.GetRedisKeyName(dataPoint.ts);
+            return writer.AppendAsync(key, dataPoint);
         }
 
-        public Task AddAsync(IEnumerable<DataPoint> dataPoints)
+        public Task AddAsync(params DataPoint[] dataPoints)
         {
-            if (dataPoints == null || dataPoints.Count() == 0)
+            if (dataPoints == null || dataPoints.Length == 0)
                 return Task.FromResult<object>(null);
 
             var tasks = new List<Task>();

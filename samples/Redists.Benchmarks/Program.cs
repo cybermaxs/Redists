@@ -34,7 +34,7 @@ namespace Redists.Benchmarks
             var tasks = new List<Task>();
             foreach(var i in Enumerable.Range(1, 5000))
             {
-                tasks.Add(client.AddAsync(gen.Next(), DateTime.UtcNow));
+                tasks.Add(client.AddAsync(DateTime.UtcNow, gen.Next() ));
             }
 
             Task.WaitAll(tasks.ToArray());
