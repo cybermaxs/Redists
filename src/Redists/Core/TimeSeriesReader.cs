@@ -22,10 +22,10 @@ namespace Redists.Core
             var cursor = 0;
             while ( (partialRaw = await ReadBlockAsync(redisKey, cursor).ConfigureAwait(false))!=string.Empty)
             {
-                var lastindex = partialRaw.LastIndexOf(Constants.InterDelimiter);
-                var partialRawStrict = partialRaw[partialRaw.Length-1]!=Constants.InterDelimiter[0] ? partialRaw.Remove(lastindex + 1) : partialRaw;
+                var lastindex = partialRaw.LastIndexOf(Constants.InterDelimiterChar);
+                var partialRawStrict = partialRaw[partialRaw.Length-1]!=Constants.InterDelimiterChar? partialRaw.Remove(lastindex + 1) : partialRaw;
 
-                dataPoints.AddRange(parser.ParseRawString(partialRawStrict));
+                dataPoints.AddRange(parser.Deserialize(partialRawStrict));
                 cursor += partialRawStrict.Length;
 
                 if (partialRaw.Length < Constants.BufferSize)

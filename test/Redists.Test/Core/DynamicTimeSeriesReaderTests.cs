@@ -76,7 +76,7 @@ namespace Redists.Test.Core
             StringBuilder builder = new StringBuilder();
             foreach (var i in Enumerable.Range(1, nbItems))
             {
-                builder.Append((10000 + i) + ":" + i + Constants.InterDelimiter);
+                builder.Append((10000 + i) + ":" + i + Constants.InterDelimiterChar);
             }
             return builder.ToString();
         }
@@ -87,7 +87,7 @@ namespace Redists.Test.Core
             StringBuilder builder = new StringBuilder();
             foreach (var i in Enumerable.Range(1, 5000))
             {
-                builder.Append((5000 + i) + ":" + i + Constants.InterDelimiter);
+                builder.Append((5000 + i) + ":" + i + Constants.InterDelimiterChar);
             }
             var all = builder.ToString();
 

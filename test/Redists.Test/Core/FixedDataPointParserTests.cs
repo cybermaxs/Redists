@@ -10,7 +10,7 @@ namespace Redists.Test.Core
 {
     public class FixedDataPointParserTests
     {
-        IDataPointParser parser = new FixedDataPointParser();
+        FixedDataPointParser parser = new FixedDataPointParser();
 
         [Fact]
         public void SerializationWithDefault()
@@ -31,20 +31,23 @@ namespace Redists.Test.Core
             Assert.Equal("0000000000123:0000000000000000456", res);
         }
 
-        [Fact]
-        public void Deserialization()
+        [Theory]
+        [InlineData("0000000000333:0000000000000000444", 333, 444)]
+        public void Deserialization(string raw, long ts, long value)
         {
-            var dataPoint = parser.Deserialize("0000000000333:0000000000000000444");
+
+            var dataPoint = parser.Deserialize(raw);
 
             Assert.NotNull(dataPoint);
-            Assert.Equal(333, dataPoint.ts);
-            Assert.Equal(444, dataPoint.value);
+            Assert.True(dataPoint.Length == 1);
+            Assert.Equal(ts, dataPoint[0].ts);
+            Assert.Equal(value, dataPoint[0].value);
         }
 
         [Fact]
         public void ParseRaw()
         {
-            var dataPoints = parser.ParseRawString("0000000000111:0000000000000000222#0000000000333:0000000000000000444#0000000000555:0000000000000000666#");
+            var dataPoints = parser.Deserialize("0000000000111:0000000000000000222#0000000000333:0000000000000000444#0000000000555:0000000000000000666#");
 
             Assert.NotNull(dataPoints);
             Assert.Equal(3, dataPoints.Length);

@@ -5,7 +5,7 @@ namespace Redists.Test.Core
 {
     public class DynamicDataPointParserTests
     {
-        IDataPointParser parser = new DynamicDataPointParser();
+        DynamicDataPointParser parser = new DynamicDataPointParser();
 
         [Fact]
         public void SerializationWithDefault()
@@ -26,20 +26,23 @@ namespace Redists.Test.Core
             Assert.Equal("123:456", res);
         }
 
-        [Fact]
-        public void Deserialization()
+        [Theory]
+        [InlineData("123:456", 123, 456)]
+        [InlineData("123:456#", 123, 456)]
+        public void Deserialization(string raw, long ts, long value)
         {
-            var dataPoint = parser.Deserialize("333:444");
+            var dataPoint = parser.Deserialize(raw);
 
             Assert.NotNull(dataPoint);
-            Assert.Equal(333, dataPoint.ts);
-            Assert.Equal(444,dataPoint.value);
+            Assert.True(dataPoint.Length==1);
+            Assert.Equal(ts, dataPoint[0].ts);
+            Assert.Equal(value, dataPoint[0].value);
         }
 
         [Fact]
         public void ParseRaw()
         {
-            var dataPoints = parser.ParseRawString("111:222#333:444#555:666#");
+            var dataPoints = parser.Deserialize("111:222#333:444#555:666#");
 
             Assert.NotNull(dataPoints);
             Assert.Equal(3, dataPoints.Length);

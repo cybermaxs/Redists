@@ -23,7 +23,7 @@ namespace Redists.Core
         public Task<long> AppendAsync(string redisKey, DataPoint[] dataPoints)
         {
             ManageKeyExpiration(redisKey);
-            var toAppend = parser.Serialize(dataPoints) + Constants.InterDelimiter;
+            var toAppend = parser.Serialize(dataPoints);
             return this.dbAsync.StringAppendAsync(redisKey, toAppend, CommandFlags.FireAndForget);
         }
 

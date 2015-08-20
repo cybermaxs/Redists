@@ -1,42 +1,48 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Redists.Core
 {
-    internal class DynamicDataPointParser : IDataPointParser
+    internal sealed class DynamicDataPointParser : IDataPointParser
     {
         #region publics
-        public DataPoint[] ParseRawString(string raw)
+        public DataPoint[] Deserialize(string rawString)
         {
-            return ParseDynamic(raw);
-        }
-        public DataPoint Deserialize(string rawDataPoint)
-        {
-            var parts = rawDataPoint.Split(new string[] { Constants.IntraDelimiter }, StringSplitOptions.RemoveEmptyEntries);
+            if (string.IsNullOrEmpty(rawString))
+                return new DataPoint[0];
+
+            var points = new List<DataPoint>();
+            var startIndex = 0;
+            var currentIndex = 0;
+
+            var buffer = string.Empty;
             long ts;
             long value;
-            long.TryParse(parts[0], out ts);
-            long.TryParse(parts[1], out value);
 
-            return new DataPoint(ts, value);
+            while (startIndex < rawString.Length)
+            {
+                currentIndex = rawString.IndexOf(Constants.InterDelimiterChar, startIndex);
+
+                if (currentIndex == -1)
+                    currentIndex = rawString.Length;
+
+                buffer = rawString.Substring(startIndex, currentIndex - startIndex);
+                var intraIndex = buffer.IndexOf(Constants.IntraDelimiterChar);
+                long.TryParse(buffer.Substring(0, intraIndex), out ts);
+                long.TryParse(buffer.Substring(intraIndex + 1, buffer.Length - intraIndex - 1), out value);
+
+                var point = new DataPoint(ts, value);
+                points.Add(point);
+
+                startIndex = currentIndex + 1;
+            }
+
+            return points.ToArray();
         }
 
-        public string Serialize(params DataPoint[] dataPoint)
-        {
-            return string.Join(Constants.InterDelimiter, dataPoint.Select(r => SerializeInternal(r)).ToArray());
-        }
-
-        #endregion
-
-        #region privates
-        private DataPoint[] ParseDynamic(string raw)
-        {
-            var parts = raw.Split(new string[] { Constants.InterDelimiter }, StringSplitOptions.RemoveEmptyEntries);
-            return parts.Select(Deserialize).ToArray();
-        }
-        #endregion
-
-        private static string SerializeInternal(DataPoint dataPoint)
+        public string Serialize(DataPoint dataPoint)
         {
             if (dataPoint == DataPoint.Empty)
                 return string.Empty;
@@ -44,7 +50,26 @@ namespace Redists.Core
             var stringTs = dataPoint.ts.ToString();
             var stringValue = dataPoint.value.ToString();
 
-            return string.Concat(stringTs, Constants.IntraDelimiter, stringValue);
+            return string.Concat(stringTs, Constants.IntraDelimiterChar.ToString(), stringValue);
         }
+
+        public string Serialize(DataPoint[] dataPoints)
+        {
+            if (dataPoints == null || dataPoints.Length == 0)
+                return string.Empty;
+
+            var builder = new StringBuilder();
+            foreach (var dp in dataPoints)
+            {
+                builder.Append(dp.ts);
+                builder.Append(Constants.IntraDelimiterChar);
+                builder.Append(dp.value);
+                builder.Append(Constants.InterDelimiterChar);
+            }
+
+            return builder.ToString();
+        }
+
+        #endregion
     }
 }

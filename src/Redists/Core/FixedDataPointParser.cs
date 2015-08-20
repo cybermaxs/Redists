@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
-using Redists.Extensions;
-using System.Collections.Generic;
+using System.Text;
 
 namespace Redists.Core
 {
@@ -13,24 +12,57 @@ namespace Redists.Core
         public const string ValueFormat = "D19";
 
         #region publics
-        public DataPoint[] ParseRawString(string raw)
+        public DataPoint[] Deserialize(string raw)
         {
-            return ParseFixed(raw);
-        }
-        public DataPoint Deserialize(string rawDataPoint)
-        {
-            var parts = rawDataPoint.Split(new string[] { Constants.IntraDelimiter }, StringSplitOptions.RemoveEmptyEntries);
+            var fixedSize = KeyLength + ValueLength + 1;
+            var nbItems = raw.Length / (fixedSize + 1);
+            var results = new DataPoint[nbItems == 0 ? 1 : nbItems];
+
+            var current = 0;
+            var buffer = string.Empty;
             long ts;
             long value;
-            long.TryParse(parts[0], out ts);
-            long.TryParse(parts[1], out value);
 
-            return new DataPoint(ts, value);
+            while (current < raw.Length)
+            {
+                buffer = raw.Substring(current, fixedSize);
+                long.TryParse(buffer.Substring(0, KeyLength), out ts);
+                long.TryParse(buffer.Substring(KeyLength + 1, ValueLength), out value);
+
+                var point = new DataPoint(ts, value);
+
+                results[current / (fixedSize + 1)] = point;
+                current += (fixedSize + 1);
+            }
+            return results;
         }
 
-        public string Serialize(params DataPoint[] dataPoint)
+        public string Serialize(DataPoint dataPoint)
         {
-            return string.Join(Constants.InterDelimiter, dataPoint.Select(SerializeInternal).ToArray());
+            if (dataPoint == DataPoint.Empty)
+                return string.Empty;
+
+            var stringTs = dataPoint.ts.ToString(KeyFormat);
+            var stringValue = dataPoint.value.ToString(ValueFormat);
+
+            return stringTs + Constants.IntraDelimiterChar + stringValue;
+        }
+
+        public string Serialize(DataPoint[] dataPoints)
+        {
+            if (dataPoints == null || dataPoints.Length == 0)
+                return string.Empty;
+
+            var builder = new StringBuilder();
+            foreach (var dp in dataPoints)
+            {
+                builder.Append(dp.ts.ToString(KeyFormat));
+                builder.Append(Constants.IntraDelimiterChar);
+                builder.Append(dp.value.ToString(ValueFormat));
+                builder.Append(Constants.InterDelimiterChar);
+            }
+
+            return builder.ToString();
         }
         #endregion
 
@@ -42,24 +74,13 @@ namespace Redists.Core
             var results = new DataPoint[nbItems];
 
             var current = 0;
-            while (current != raw.Length)
-            {
-                var dataPoint = this.Deserialize(raw.Substring(current, fixedSize));
-                results[current / (fixedSize + 1)] = dataPoint;
-                current += (fixedSize + 1);
-            }
+            //while (current != raw.Length)
+            //{
+            //    var dataPoint = this.Deserialize(raw.Substring(current, fixedSize));
+            //    results[current / (fixedSize + 1)] = dataPoint;
+            //    current += (fixedSize + 1);
+            //}
             return results;
-        }
-
-        private static string SerializeInternal(DataPoint dataPoint)
-        {
-            if (dataPoint == DataPoint.Empty)
-                return string.Empty;
-
-            var stringTs = dataPoint.ts.ToString(KeyFormat);
-            var stringValue = dataPoint.value.ToString(ValueFormat);
-
-            return stringTs + Constants.IntraDelimiter + stringValue;
         }
         #endregion
 
