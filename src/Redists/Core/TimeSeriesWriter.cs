@@ -8,8 +8,8 @@ namespace Redists.Core
     internal class TimeSeriesWriter : ITimeSeriesWriter
     {
         private readonly IDatabaseAsync dbAsync;
-        private TimeSpan? ttl;
-        private IDataPointParser parser;
+        private readonly TimeSpan? ttl;
+        private readonly IDataPointParser parser;
 
         private ConcurrentDictionary<string, DateTime> expirations = new ConcurrentDictionary<string, DateTime>();
 
@@ -20,11 +20,11 @@ namespace Redists.Core
             this.ttl = ttl;
         }
 
-        public Task<long> AppendAsync(string redisKey, params DataPoint[] dataPoints)
+        public Task<long> AppendAsync(string redisKey, DataPoint[] dataPoints)
         {
             ManageKeyExpiration(redisKey);
             var toAppend = parser.Serialize(dataPoints) + Constants.InterDelimiter;
-            return this.dbAsync.StringAppendAsync(redisKey, toAppend);
+            return this.dbAsync.StringAppendAsync(redisKey, toAppend, CommandFlags.FireAndForget);
         }
 
         private void ManageKeyExpiration(string key)
@@ -32,7 +32,7 @@ namespace Redists.Core
             if (!this.ttl.HasValue)
                 return;
 
-            DateTime lastSent=expirations.GetOrAdd(key, DateTime.MinValue);
+            var lastSent=expirations.GetOrAdd(key, DateTime.MinValue);
             if ((DateTime.UtcNow- lastSent)> this.ttl.Value)
             {
                 this.dbAsync.KeyExpireAsync(key, ttl);

@@ -10,16 +10,15 @@ namespace Redists
 {
     internal class TimeSeriesClient : ITimeSeriesClient
     {
-        private readonly string name;
+        private readonly string prefix;
         private readonly TimeSeriesOptions settings;
         private readonly ITimeSeriesWriter writer;
         private readonly ITimeSeriesReader reader;
 
         public TimeSeriesClient(string name, TimeSeriesOptions settings, ITimeSeriesReader reader, ITimeSeriesWriter writer)
         {
-            this.name = name;
+            this.prefix = $"ts#" + name + "#";
             this.settings = settings;
-
             this.reader = reader;
             this.writer = writer;
         }
@@ -29,7 +28,7 @@ namespace Redists
             var dataPoint = new DataPoint(at, value);
             dataPoint.Normalize(this.settings.DataPointNormFactor);
             var key = this.GetRedisKeyName(dataPoint.ts);
-            return writer.AppendAsync(key, dataPoint);
+            return writer.AppendAsync(key, new DataPoint[] { dataPoint });
         }
 
         public Task AddAsync(params DataPoint[] dataPoints)
@@ -71,7 +70,7 @@ namespace Redists
 
         private string GetRedisKeyName(long ts)
         {
-            return "ts#" + this.name + "#" + ts.Normalize(this.settings.KeyNormFactor).ToString();
+            return this.prefix + ts.Normalize(this.settings.KeyNormFactor).ToString();
         }
     }
 }

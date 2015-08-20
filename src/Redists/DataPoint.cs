@@ -10,7 +10,7 @@ namespace Redists
     {
         public static DataPoint Empty = new DataPoint();
         public long ts;
-        public long value;
+        public readonly long value;
 
         public DataPoint(long timeStamp, long value)
         {
@@ -43,7 +43,7 @@ namespace Redists
         {
             if (obj == null || GetType() != obj.GetType())
                 return false;
-            DataPoint r = (DataPoint)obj;
+            var r = (DataPoint)obj;
             return (ts == r.ts) && (value == r.value);
         }
 
@@ -53,7 +53,7 @@ namespace Redists
         }
         public override string ToString()
         {
-            return this.ts + ":" + this.value.ToString();
+            return this.ts.ToString() + ":" + this.value.ToString();
         }
         #endregion
     }

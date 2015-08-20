@@ -10,9 +10,9 @@ namespace Redists
     {
         public static ITimeSeriesClient New(IDatabaseAsync dbAsync, string name, TimeSeriesOptions settings)
         {
-            Guard.NotNull(dbAsync, "dbAsync");
-            Guard.NotNullOrEmpty(name, "name");
-            Guard.NotNull(settings, "settings");
+            Guard.NotNull(dbAsync, nameof(dbAsync));
+            Guard.NotNullOrEmpty(name, nameof(name));
+            Guard.NotNull(settings, nameof(settings));
 
             if (dbAsync.Multiplexer==null || !dbAsync.Multiplexer.IsConnected)
                 throw new InvalidOperationException("redis connection is not open or down");

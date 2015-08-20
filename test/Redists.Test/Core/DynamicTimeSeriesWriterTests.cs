@@ -26,7 +26,7 @@ namespace Redists.Test.Core
         {
             var key = this.fixture.Create<string>();
             var dataPoint = new DataPoint(123, 456);
-            var t = writer.AppendAsync(key, dataPoint);
+            var t = writer.AppendAsync(key, new DataPoint[] { dataPoint });
 
             Assert.NotNull(t);
             t.Wait();

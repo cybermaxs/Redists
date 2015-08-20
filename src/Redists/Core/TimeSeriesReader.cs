@@ -17,9 +17,9 @@ namespace Redists.Core
         public async Task<DataPoint[]> ReadAllAsync(string redisKey)
         {
             ///read by batch
-            List<DataPoint> dataPoints = new List<DataPoint>();
-            string partialRaw = string.Empty;
-            int cursor = 0;
+            var dataPoints = new List<DataPoint>();
+            var partialRaw = string.Empty;
+            var cursor = 0;
             while ( (partialRaw = await ReadBlockAsync(redisKey, cursor).ConfigureAwait(false))!=string.Empty)
             {
                 var lastindex = partialRaw.LastIndexOf(Constants.InterDelimiter);
@@ -35,10 +35,10 @@ namespace Redists.Core
             return dataPoints.ToArray();
         }
 
-        private async Task<string> ReadBlockAsync(string redisKey, int start)
+        private async Task<string> ReadBlockAsync(string redisKey, long start)
         {
-            var raw = (string)await this.dbAsync.StringGetRangeAsync(redisKey, start, start + Constants.BufferSize).ConfigureAwait(false);
-            return raw;
+            var redisValue = await dbAsync.StringGetRangeAsync(redisKey, start, start + Constants.BufferSize).ConfigureAwait(false);
+            return redisValue.ToString();
         }
     }
 }

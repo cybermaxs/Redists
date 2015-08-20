@@ -19,7 +19,7 @@ namespace Redists.Extensions
         /// <returns>Number of milliseconds since 1/1/1970 (Unix timestamp)</returns>
         public static long ToTimestamp(this DateTime date)
         {
-            long ts = (date.Ticks - EpochTicks) / TicksPeriodMs;
+            var ts = (date.Ticks - EpochTicks) / TicksPeriodMs;
             return ts;
         }
 
@@ -41,7 +41,7 @@ namespace Redists.Extensions
         /// <returns>Number of seconds since 1/1/1970 (Unix timestamp)</returns>
         public static long ToSecondsTimestamp(this DateTime date)
         {
-            long ts = (date.Ticks - EpochTicks) / TicksPeriod;
+            var ts = (date.Ticks - EpochTicks) / TicksPeriod;
             return ts;
         }
 

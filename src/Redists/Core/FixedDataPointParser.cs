@@ -30,7 +30,7 @@ namespace Redists.Core
 
         public string Serialize(params DataPoint[] dataPoint)
         {
-            return string.Join(Constants.InterDelimiter, dataPoint.Select(r => this.SerializeInternal(r)).ToArray());
+            return string.Join(Constants.InterDelimiter, dataPoint.Select(SerializeInternal).ToArray());
         }
         #endregion
 
@@ -41,17 +41,17 @@ namespace Redists.Core
             var nbItems = raw.Length / (fixedSize + 1);
             var results = new DataPoint[nbItems];
 
-            int current = 0;
+            var current = 0;
             while (current != raw.Length)
             {
-                DataPoint dataPoint = this.Deserialize(raw.Substring(current, fixedSize));
+                var dataPoint = this.Deserialize(raw.Substring(current, fixedSize));
                 results[current / (fixedSize + 1)] = dataPoint;
                 current += (fixedSize + 1);
             }
             return results;
         }
 
-        private string SerializeInternal(DataPoint dataPoint)
+        private static string SerializeInternal(DataPoint dataPoint)
         {
             if (dataPoint == DataPoint.Empty)
                 return string.Empty;
