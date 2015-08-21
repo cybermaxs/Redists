@@ -1,9 +1,4 @@
 ﻿using Redists.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Redists.Test.Core
@@ -13,30 +8,39 @@ namespace Redists.Test.Core
         FixedDataPointParser parser = new FixedDataPointParser();
 
         [Fact]
-        public void SerializationWithDefault()
+        public void Serialize_EdgesCases_ShouldPass()
         {
-            var res = parser.Serialize(DataPoint.Empty);
+            //null
+            var res1 = parser.Serialize(null);
+            Assert.Equal(0, res1.Length);
+            Assert.Equal(string.Empty, res1);
 
-            Assert.Equal(0, res.Length);
-            Assert.Equal(string.Empty, res);
+            //empty array
+            var res2 = parser.Serialize(new DataPoint[0]);
+            Assert.Equal(0, res2.Length);
+            Assert.Equal(string.Empty, res2);
         }
 
-        [Fact]
-        public void Serialization()
+        [Theory]
+        [InlineData(123, 456, "0000000000123:0000000000000000456#")]
+        public void Serialize_Default(long ts, long value, string expected)
         {
-            var dataPoint = new DataPoint(123, 456);
-            var res = parser.Serialize(dataPoint);
+            var dataPoint = new DataPoint(ts, value);
+            var res = parser.Serialize(new DataPoint[] { dataPoint });
 
-            Assert.Equal(33, res.Length);
-            Assert.Equal("0000000000123:0000000000000000456", res);
+            Assert.Equal(expected.Length, res.Length);
+            Assert.Equal(expected, res);
         }
 
         [Theory]
         [InlineData("0000000000333:0000000000000000444", 333, 444)]
+        [InlineData("0000000000333:0000000000000000444#", 333, 444)]
+        [InlineData("#0000000000333:0000000000000000444#", 333, 444)]
+        [InlineData("##0000000000333:0000000000000000444#", 333, 444)]
         public void Deserialization(string raw, long ts, long value)
         {
 
-            var dataPoint = parser.Deserialize(raw);
+            var dataPoint = parser.Parse(raw);
 
             Assert.NotNull(dataPoint);
             Assert.True(dataPoint.Length == 1);
@@ -45,9 +49,9 @@ namespace Redists.Test.Core
         }
 
         [Fact]
-        public void ParseRaw()
+        public void Parse_WhenMultiple_ShouldPass()
         {
-            var dataPoints = parser.Deserialize("0000000000111:0000000000000000222#0000000000333:0000000000000000444#0000000000555:0000000000000000666#");
+            var dataPoints = parser.Parse("0000000000111:0000000000000000222#0000000000333:0000000000000000444#0000000000555:0000000000000000666#");
 
             Assert.NotNull(dataPoints);
             Assert.Equal(3, dataPoints.Length);

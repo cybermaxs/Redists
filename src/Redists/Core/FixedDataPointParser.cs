@@ -4,15 +4,14 @@ using System.Text;
 
 namespace Redists.Core
 {
-    internal class FixedDataPointParser : IDataPointParser
+    internal sealed class FixedDataPointParser : IStringParser<DataPoint>
     {
         public const int KeyLength = 13;
         public const string KeyFormat = "D13";
         public const int ValueLength = 19;
         public const string ValueFormat = "D19";
 
-        #region publics
-        public DataPoint[] Deserialize(string raw)
+        public DataPoint[] Parse(string raw)
         {
             var fixedSize = KeyLength + ValueLength + 1;
             var nbItems = raw.Length / (fixedSize + 1);
@@ -25,6 +24,11 @@ namespace Redists.Core
 
             while (current < raw.Length)
             {
+                if(raw[current]==Constants.InterDelimiterChar)
+                {
+                    current++;
+                    continue;
+                }
                 buffer = raw.Substring(current, fixedSize);
                 long.TryParse(buffer.Substring(0, KeyLength), out ts);
                 long.TryParse(buffer.Substring(KeyLength + 1, ValueLength), out value);
@@ -35,17 +39,6 @@ namespace Redists.Core
                 current += (fixedSize + 1);
             }
             return results;
-        }
-
-        public string Serialize(DataPoint dataPoint)
-        {
-            if (dataPoint == DataPoint.Empty)
-                return string.Empty;
-
-            var stringTs = dataPoint.ts.ToString(KeyFormat);
-            var stringValue = dataPoint.value.ToString(ValueFormat);
-
-            return stringTs + Constants.IntraDelimiterChar + stringValue;
         }
 
         public string Serialize(DataPoint[] dataPoints)
@@ -64,25 +57,6 @@ namespace Redists.Core
 
             return builder.ToString();
         }
-        #endregion
-
-        #region privates
-        private DataPoint[] ParseFixed(string raw)
-        {
-            var fixedSize = KeyLength + ValueLength + 1;
-            var nbItems = raw.Length / (fixedSize + 1);
-            var results = new DataPoint[nbItems];
-
-            var current = 0;
-            //while (current != raw.Length)
-            //{
-            //    var dataPoint = this.Deserialize(raw.Substring(current, fixedSize));
-            //    results[current / (fixedSize + 1)] = dataPoint;
-            //    current += (fixedSize + 1);
-            //}
-            return results;
-        }
-        #endregion
-
+    
     }
 }

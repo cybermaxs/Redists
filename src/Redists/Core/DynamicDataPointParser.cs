@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Text;
 
 namespace Redists.Core
 {
-    internal sealed class DynamicDataPointParser : IDataPointParser
+    internal sealed class DynamicDataPointParser : IStringParser<DataPoint>
     {
-        #region publics
-        public DataPoint[] Deserialize(string rawString)
+        public DataPoint[] Parse(string raw)
         {
-            if (string.IsNullOrEmpty(rawString))
+            if (string.IsNullOrEmpty(raw))
                 return new DataPoint[0];
 
             var points = new List<DataPoint>();
@@ -21,36 +18,28 @@ namespace Redists.Core
             long ts;
             long value;
 
-            while (startIndex < rawString.Length)
+            while (startIndex < raw.Length)
             {
-                currentIndex = rawString.IndexOf(Constants.InterDelimiterChar, startIndex);
+                currentIndex = raw.IndexOf(Constants.InterDelimiterChar, startIndex);
 
-                if (currentIndex == -1)
-                    currentIndex = rawString.Length;
+                if (currentIndex == -1) //last part
+                    currentIndex = raw.Length;
 
-                buffer = rawString.Substring(startIndex, currentIndex - startIndex);
-                var intraIndex = buffer.IndexOf(Constants.IntraDelimiterChar);
-                long.TryParse(buffer.Substring(0, intraIndex), out ts);
-                long.TryParse(buffer.Substring(intraIndex + 1, buffer.Length - intraIndex - 1), out value);
+                if (currentIndex!=startIndex)//delimiter at first char
+                {
+                    buffer = raw.Substring(startIndex, currentIndex - startIndex);
+                    var intraIndex = buffer.IndexOf(Constants.IntraDelimiterChar);
+                    long.TryParse(buffer.Substring(0, intraIndex), out ts);
+                    long.TryParse(buffer.Substring(intraIndex + 1, buffer.Length - intraIndex - 1), out value);
 
-                var point = new DataPoint(ts, value);
-                points.Add(point);
+                    var point = new DataPoint(ts, value);
+                    points.Add(point);
+                }
 
                 startIndex = currentIndex + 1;
             }
 
             return points.ToArray();
-        }
-
-        public string Serialize(DataPoint dataPoint)
-        {
-            if (dataPoint == DataPoint.Empty)
-                return string.Empty;
-
-            var stringTs = dataPoint.ts.ToString();
-            var stringValue = dataPoint.value.ToString();
-
-            return string.Concat(stringTs, Constants.IntraDelimiterChar.ToString(), stringValue);
         }
 
         public string Serialize(DataPoint[] dataPoints)
@@ -69,7 +58,5 @@ namespace Redists.Core
 
             return builder.ToString();
         }
-
-        #endregion
     }
 }

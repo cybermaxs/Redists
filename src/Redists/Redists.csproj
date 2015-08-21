@@ -41,7 +41,7 @@
   <ItemGroup>
     <Compile Include="Constants.cs" />
     <Compile Include="Core\DynamicDataPointParser.cs" />
-    <Compile Include="Core\IDataPointParser.cs" />
+    <Compile Include="Core\IStringParser.cs" />
     <Compile Include="Core\ITimeSeriesReader.cs" />
     <Compile Include="Core\ITimeSeriesWriter.cs" />
     <Compile Include="Core\FixedDataPointParser.cs" />

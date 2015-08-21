@@ -19,7 +19,7 @@ namespace Redists.Test.Core
         {
             mockOfDb = new Mock<IDatabase>();
             mockOfDb.Setup(db => db.StringGetRangeAsync("short", It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CommandFlags>())).ReturnsAsync(Generate(100));
-            mockOfDb.Setup(db => db.StringGetRangeAsync("long", It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CommandFlags>())).Returns<RedisKey, long, long, CommandFlags>(this.GeneratePartial5000);
+            mockOfDb.Setup(db => db.StringGetRangeAsync("long", It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CommandFlags>())).ReturnsAsync(Generate(5000));
             mockOfDb.Setup(db => db.StringGetRangeAsync("broken", It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CommandFlags>())).Returns<RedisKey, long, long, CommandFlags>(this.GeneratePartial5000);
             var parser = new FixedDataPointParser();
             reader = new TimeSeriesReader(mockOfDb.Object, parser);
@@ -71,27 +71,17 @@ namespace Redists.Test.Core
         }
 
         #region Privates
-        private string Generate(int nbItems=100)
+        private string Generate(int nbItems = 100)
         {
-            FixedDataPointParser parser = new FixedDataPointParser();
-            StringBuilder builder = new StringBuilder();
-            foreach (var i in Enumerable.Range(1, nbItems))
-            {
-                builder.Append(parser.Serialize(new DataPoint(10000+i,i))+Constants.InterDelimiterChar);
-            }
-            return builder.ToString();
+            var parser = new FixedDataPointParser();
+            return parser.Serialize(Enumerable.Range(1, nbItems).Select(i => new DataPoint(10000 + i, i)).ToArray());
         }
 
         private Task<RedisValue> GeneratePartial5000(RedisKey k, long start, long end, CommandFlags _)
         {
-            FixedDataPointParser parser = new FixedDataPointParser();
+            var parser = new FixedDataPointParser();
             //generate data
-            StringBuilder builder = new StringBuilder();
-            foreach (var i in Enumerable.Range(1, 5000))
-            {
-                builder.Append(parser.Serialize(new DataPoint(10000 + i, i)) + Constants.InterDelimiterChar);
-            }
-            var all = builder.ToString();
+            var all = parser.Serialize(Enumerable.Range(1, 5000).Select(i => new DataPoint(10000 + i, i)).ToArray());
 
             if (start == all.Length)
                 return Task.FromResult<RedisValue>(string.Empty);

@@ -9,11 +9,11 @@ namespace Redists.Core
     {
         private readonly IDatabaseAsync dbAsync;
         private readonly TimeSpan? ttl;
-        private readonly IDataPointParser parser;
+        private readonly IStringParser<DataPoint> parser;
 
         private ConcurrentDictionary<string, DateTime> expirations = new ConcurrentDictionary<string, DateTime>();
 
-        public TimeSeriesWriter(IDatabaseAsync dbAsync, IDataPointParser parser, TimeSpan? ttl)
+        public TimeSeriesWriter(IDatabaseAsync dbAsync, IStringParser<DataPoint> parser, TimeSpan? ttl)
         {
             this.dbAsync = dbAsync;
             this.parser = parser;

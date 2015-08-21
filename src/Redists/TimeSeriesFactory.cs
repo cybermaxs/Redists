@@ -17,7 +17,7 @@ namespace Redists
             if (dbAsync.Multiplexer==null || !dbAsync.Multiplexer.IsConnected)
                 throw new InvalidOperationException("redis connection is not open or down");
 
-            var parser = settings.UseFixedSize ? (IDataPointParser)new FixedDataPointParser() : new DynamicDataPointParser();
+            var parser = settings.UseFixedSize ? (IStringParser<DataPoint>)new FixedDataPointParser() : new DynamicDataPointParser();
             var reader = new TimeSeriesReader(dbAsync, parser);
             var writer = new TimeSeriesWriter(dbAsync, parser, settings.KeyTtl);
 

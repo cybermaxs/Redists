@@ -7,8 +7,8 @@ namespace Redists.Core
     internal class TimeSeriesReader : ITimeSeriesReader
     {
         private readonly IDatabaseAsync dbAsync;
-        private readonly IDataPointParser parser;
-        public TimeSeriesReader(IDatabaseAsync dbAsync, IDataPointParser parser)
+        private readonly IStringParser<DataPoint> parser;
+        public TimeSeriesReader(IDatabaseAsync dbAsync, IStringParser<DataPoint> parser)
         {
             this.dbAsync = dbAsync;
             this.parser = parser;
@@ -25,7 +25,7 @@ namespace Redists.Core
                 var lastindex = partialRaw.LastIndexOf(Constants.InterDelimiterChar);
                 var partialRawStrict = partialRaw[partialRaw.Length-1]!=Constants.InterDelimiterChar? partialRaw.Remove(lastindex + 1) : partialRaw;
 
-                dataPoints.AddRange(parser.Deserialize(partialRawStrict));
+                dataPoints.AddRange(parser.Parse(partialRawStrict));
                 cursor += partialRawStrict.Length;
 
                 if (partialRaw.Length < Constants.BufferSize)
