@@ -44,13 +44,5 @@ namespace Redists.Configuration
             this.KeyTtl = keyTtl;
             this.DataPointNormFactor = dataPointNormalizationFactor;
         }
-
-        public TimeSeriesOptions(int v1, int v2, bool v3, object p)
-        {
-            this.v1 = v1;
-            this.v2 = v2;
-            this.v3 = v3;
-            this.p = p;
-        }
     }
 }

@@ -20,7 +20,7 @@ namespace Redists.Test
         {
             this.fixture = new Fixture();
             redisServer.Reset();
-            tsClient = TimeSeriesFactory.New(redisServer.GetDatabase(0), "myts", new TimeSeriesOptions(3600*1000, 1000, false, TimeSpan.FromHours(1)));
+            tsClient = TimeSeriesFactory.NewFixed(redisServer.GetDatabase(0), "myts", new TimeSeriesOptions(3600*1000, 1000, TimeSpan.FromHours(1)));
         }
 
         [Fact]
@@ -36,7 +36,7 @@ namespace Redists.Test
             }
             await Task.WhenAll(tasks);
 
-            var r = await tsClient.AllAsync(start);
+            var r = await tsClient.AllSinceAsync(start);
             Assert.Equal(3600, r.Length);
             foreach (var i in Enumerable.Range(0, 3599))
             {
@@ -56,7 +56,7 @@ namespace Redists.Test
                 tasks.Add(tsClient.AddAsync(now, 1));
             await Task.WhenAll(tasks);
 
-            var r = await tsClient.AllAsync(now);
+            var r = await tsClient.AllSinceAsync(now);
             Assert.Equal(10000, r.Length);
         }
 
@@ -73,7 +73,7 @@ namespace Redists.Test
             }
             await tsClient.AddAsync(datas.ToArray());
 
-            var r = await tsClient.AllAsync(start);
+            var r = await tsClient.AllSinceAsync(start);
             Assert.Equal(100, r.Length);
             foreach (var i in Enumerable.Range(0, 99))
             {

@@ -52,7 +52,7 @@ namespace Redists.Benchmarks
             var start = DateTime.UtcNow.Date;
             var end = DateTime.UtcNow.Date.AddHours(1);
 
-            await client.AllAsync(start, end);
+            await client.RangeAsync(start, end);
         }
     }
 }

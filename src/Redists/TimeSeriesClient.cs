@@ -53,9 +53,19 @@ namespace Redists
             return Task.WhenAll(tasks.ToArray());
         }
 
-        public async Task<DataPoint[]> AllAsync(DateTime from, DateTime? to = null)
+        public Task<DataPoint[]> AllSinceAsync(DateTime from)
         {
-            var dts = from.ToKeyDateTimes(to ?? DateTime.UtcNow, this.settings.KeyNormFactor);
+            if (from.Kind != DateTimeKind.Utc)
+                throw new InvalidOperationException("from should be an UTC datetime.");
+
+            return RangeAsync(from, DateTime.UtcNow);
+        }
+        public async Task<DataPoint[]> RangeAsync(DateTime from, DateTime to)
+        {
+            if (from.Kind != DateTimeKind.Utc || to.Kind != DateTimeKind.Utc)
+                throw new InvalidOperationException("from/to should be UTC datetimes.");
+
+            var dts = from.ToKeyDateTimes(to , this.settings.KeyNormFactor);
 
             var tasks = new List<Task<DataPoint[]>>();
 

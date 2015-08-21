@@ -8,6 +8,7 @@ namespace Redists
     {
         Task AddAsync(DateTime at, long value);
         Task AddAsync(params DataPoint[] dataPoints);
-        Task<DataPoint[]> AllAsync(DateTime at, DateTime? to = null);
+        Task<DataPoint[]> AllSinceAsync(DateTime at);
+        Task<DataPoint[]> RangeAsync(DateTime from, DateTime to);
     }
 }

@@ -59,15 +59,19 @@ namespace Redists.Extensions
 
         public static DateTime[] ToKeyDateTimes(this DateTime from, DateTime to, long factor)
         {
-            var res = new List<DateTime>();
             var end = to.ToTimestamp();
             var current = from.ToRoundedTimestamp(factor);
+            var nbItems = (end - current) / factor +1;
+            var res = new DateTime[nbItems];
+            var itemIndex = 0;
+
             while (current <= end)
             {
-                res.Add(new DateTime(EpochTicks+ current * TimeSpan.TicksPerMillisecond));
+                res[itemIndex]=  new DateTime(EpochTicks+ current * TimeSpan.TicksPerMillisecond);
                 current += factor;
+                itemIndex++;
             }
-            return res.ToArray();
+            return res;
         }
     }
 }
