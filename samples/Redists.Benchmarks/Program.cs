@@ -27,27 +27,42 @@ namespace Redists.Benchmarks
                 return;
             }
 
-            //setup redists   
+            //setup redists  
+            var db = mux.GetDatabase(0); 
             var tsOptions = new TimeSeriesOptions(3600 * 1000, 1, TimeSpan.FromDays(1));
-            
+
+            mux.GetServer("localhost:6379").FlushAllDatabases();
             Profile("OneByOne", Iterations,() =>
             {
-                var client = TimeSeriesFactory.New(mux.GetDatabase(0), "myts1", tsOptions);
+                var client = TimeSeriesFactory.New(db, "msts", tsOptions);
                 Methods.AddAsync(client).Wait();
             });
+            mux.GetServer("localhost:6379").FlushAllDatabases();
             Profile("Add100", Iterations,() =>
             {
-                var client = TimeSeriesFactory.New(mux.GetDatabase(0), "myts2", tsOptions);
+                var client = TimeSeriesFactory.New(db, "myts", tsOptions);
                 Methods.Add100Async(client).Wait();
             });
+            mux.GetServer("localhost:6379").FlushAllDatabases();
             Profile("Batch", Iterations, () =>
             {
-                var client = TimeSeriesFactory.New(mux.GetDatabase(0), "myts2", tsOptions);
+                var client = TimeSeriesFactory.New(db, "msts", tsOptions);
                 Methods.AddBatchof100Async(client).Wait();
             });
-            Profile("ReadAll", Iterations,() =>
+
+            mux.GetServer("localhost:6379").FlushAllDatabases();
+            var tmpclient = TimeSeriesFactory.New(db, "myts", tsOptions);
+            tmpclient.AddAsync(Enumerable.Range(1, 3600 * 24).Select(i => new DataPoint(DateTime.UtcNow.Date.AddSeconds(i), i)).ToArray());
+            Profile("ReadAll dynamic", Iterations,() =>
             {
-                var client = TimeSeriesFactory.New(mux.GetDatabase(0), "myts3", tsOptions);
+                var client = TimeSeriesFactory.New(db, "myts3", tsOptions);
+                Methods.ReadAllAsync(client).Wait();
+            });
+            var tmpclientfx = TimeSeriesFactory.NewFixed(db, "myts", tsOptions);
+            tmpclientfx.AddAsync(Enumerable.Range(1, 3600 * 24).Select(i => new DataPoint(DateTime.UtcNow.Date.AddSeconds(i), i)).ToArray());
+            Profile("ReadAll fixed", Iterations, () =>
+            {
+                var client = TimeSeriesFactory.NewFixed(mux.GetDatabase(0), "myts3", tsOptions);
                 Methods.ReadAllAsync(client).Wait();
             });
 
