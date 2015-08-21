@@ -25,7 +25,7 @@ namespace Redists.Core
                 if (currentIndex == -1) //last part
                     currentIndex = raw.Length;
 
-                if (currentIndex!=startIndex)//delimiter at first char
+                if (currentIndex != startIndex)//delimiter at first char
                 {
                     buffer = raw.Substring(startIndex, currentIndex - startIndex);
                     var intraIndex = buffer.IndexOf(Constants.IntraDelimiterChar);
@@ -47,7 +47,8 @@ namespace Redists.Core
             if (dataPoints == null || dataPoints.Length == 0)
                 return string.Empty;
 
-            var builder = new StringBuilder();
+            var fixedSize = 13 + 2 + 4; //ts + delimiters + value of 1000
+            var builder = new StringBuilder(dataPoints.Length * fixedSize);
             foreach (var dp in dataPoints)
             {
                 builder.Append(dp.ts);

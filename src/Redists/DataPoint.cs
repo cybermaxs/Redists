@@ -10,7 +10,7 @@ namespace Redists
     {
         public static DataPoint Empty = new DataPoint();
         public long ts;
-        public readonly long value;
+        public long value;
 
         public DataPoint(long timeStamp, long value)
         {

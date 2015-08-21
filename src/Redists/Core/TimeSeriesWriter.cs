@@ -35,7 +35,7 @@ namespace Redists.Core
             var lastSent=expirations.GetOrAdd(key, DateTime.MinValue);
             if ((DateTime.UtcNow- lastSent)> this.ttl.Value)
             {
-                this.dbAsync.KeyExpireAsync(key, ttl);
+                this.dbAsync.KeyExpireAsync(key, ttl, CommandFlags.FireAndForget);
                 expirations.TryUpdate(key, DateTime.UtcNow, lastSent);
             }
         }

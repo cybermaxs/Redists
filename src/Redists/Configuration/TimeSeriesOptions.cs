@@ -7,11 +7,6 @@ namespace Redists.Configuration
     /// </summary>
     public class TimeSeriesOptions
     {
-        private int v1;
-        private int v2;
-        private bool v3;
-        private object p;
-
         /// <summary>
         /// Partition key factor for a Serie (Milliseconds).
         /// Used to compute the redis key name.

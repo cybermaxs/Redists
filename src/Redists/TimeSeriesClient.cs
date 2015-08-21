@@ -36,19 +36,27 @@ namespace Redists
             if (dataPoints == null || dataPoints.Length == 0)
                 return Task.FromResult<object>(null);
 
-            var tasks = new List<Task>();
-
-            //normalize all dataPoints first
+            //group by redis key
+            var groups = new Dictionary<string, List<DataPoint>>();
             foreach (var dataPoint in dataPoints)
             {
                 dataPoint.Normalize(this.settings.DataPointNormFactor);
+                var redisKey = this.GetRedisKeyName(dataPoint.ts);
+                List<DataPoint> list;
+                if(!groups.TryGetValue(redisKey, out list))
+                {
+                    list = new List<DataPoint>();
+                    groups.Add(redisKey, list);
+                }
+                list.Add(dataPoint);
             }
 
-            //group by time series
-            foreach (var serie in dataPoints.GroupBy(k => this.GetRedisKeyName(k.ts)))
+            //batchs
+            var tasks = new List<Task>();
+            foreach (var serie in groups)
             {
                 var tsKey = serie.Key;
-                tasks.Add(writer.AppendAsync(tsKey, serie.ToArray()));
+                tasks.Add(writer.AppendAsync(tsKey, serie.Value.ToArray()));
             }
             return Task.WhenAll(tasks.ToArray());
         }

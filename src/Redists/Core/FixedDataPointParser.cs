@@ -46,7 +46,9 @@ namespace Redists.Core
             if (dataPoints == null || dataPoints.Length == 0)
                 return string.Empty;
 
-            var builder = new StringBuilder();
+            var fixedSize = KeyLength + ValueLength + 2;
+
+            var builder = new StringBuilder(dataPoints.Length * fixedSize);
             foreach (var dp in dataPoints)
             {
                 builder.Append(dp.ts.ToString(KeyFormat));
