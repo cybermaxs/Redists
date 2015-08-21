@@ -19,7 +19,7 @@ namespace Redists.Test.Core
         {
             mockOfDb = new Mock<IDatabase>();
             mockOfDb.Setup(db => db.StringGetRangeAsync("short", It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CommandFlags>())).ReturnsAsync(Generate(100));
-            mockOfDb.Setup(db => db.StringGetRangeAsync("long", It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CommandFlags>())).ReturnsAsync(Generate(5000));
+            mockOfDb.Setup(db => db.StringGetRangeAsync("long", It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CommandFlags>())).Returns<RedisKey, long, long, CommandFlags>(this.GeneratePartial5000);
             mockOfDb.Setup(db => db.StringGetRangeAsync("broken", It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CommandFlags>())).Returns<RedisKey, long, long, CommandFlags>(this.GeneratePartial5000);
             var parser = new FixedDataPointParser();
             reader = new TimeSeriesReader(mockOfDb.Object, parser);

@@ -7,6 +7,11 @@ namespace Redists.Configuration
     /// </summary>
     public class TimeSeriesOptions
     {
+        private int v1;
+        private int v2;
+        private bool v3;
+        private object p;
+
         /// <summary>
         /// Partition key factor for a Serie (Milliseconds).
         /// Used to compute the redis key name.
@@ -21,19 +26,13 @@ namespace Redists.Configuration
         /// </summary>
         public long DataPointNormFactor { get; private set; }
         /// <summary>
-        /// Use fixed size for each data point ?
-        /// default is 29 (timestamp in ms + delimiter + long)
-        /// </summary>
-        public bool UseFixedSize { get; private set; }
-
-        /// <summary>
         /// Default Constructor.
         /// </summary>
         /// <param name="keyNormalizationFactor">Key normalization factor (ms)</param>
         /// <param name="dataPointNormalizationFactor">Data point normalization factor (ms)</param>
         /// <param name="useFixedSize">Fixed or dynamic dataPoint size</param>
         /// <param name="keyTtl">Key Ttl value</param>
-        public TimeSeriesOptions(long keyNormalizationFactor, long dataPointNormalizationFactor, bool useFixedSize, TimeSpan? keyTtl)
+        public TimeSeriesOptions(long keyNormalizationFactor, long dataPointNormalizationFactor, TimeSpan? keyTtl)
         {
             if (keyNormalizationFactor < dataPointNormalizationFactor)
                 throw new InvalidOperationException("keyNormalizationFactor should be greater than dataPointNormalizationFactor");
@@ -44,7 +43,14 @@ namespace Redists.Configuration
             this.KeyNormFactor = keyNormalizationFactor;
             this.KeyTtl = keyTtl;
             this.DataPointNormFactor = dataPointNormalizationFactor;
-            this.UseFixedSize = useFixedSize;
+        }
+
+        public TimeSeriesOptions(int v1, int v2, bool v3, object p)
+        {
+            this.v1 = v1;
+            this.v2 = v2;
+            this.v3 = v3;
+            this.p = p;
         }
     }
 }

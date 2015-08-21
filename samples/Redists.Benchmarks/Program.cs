@@ -28,7 +28,7 @@ namespace Redists.Benchmarks
             }
 
             //setup redists   
-            var tsOptions = new TimeSeriesOptions(3600 * 1000, 1, true, TimeSpan.FromDays(1));
+            var tsOptions = new TimeSeriesOptions(3600 * 1000, 1, TimeSpan.FromDays(1));
             
             Profile("OneByOne", Iterations,() =>
             {

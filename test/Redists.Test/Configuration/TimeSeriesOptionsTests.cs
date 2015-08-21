@@ -10,16 +10,16 @@ namespace Redists.Test.Configuration
         public void Ctor_BadArgs_ShouldThrowException()
         {
             // key factor vs dataPoint factor 
-            Assert.Throws<InvalidOperationException>(() => { TimeSeriesOptions options = new TimeSeriesOptions(100, 200, false, TimeSpan.MaxValue); });
+            Assert.Throws<InvalidOperationException>(() => { TimeSeriesOptions options = new TimeSeriesOptions(100, 200, TimeSpan.MaxValue); });
 
             // ttl value vs key factor 
-            Assert.Throws<InvalidOperationException>(() => { TimeSeriesOptions options = new TimeSeriesOptions(200, 100, false, TimeSpan.MinValue); });
+            Assert.Throws<InvalidOperationException>(() => { TimeSeriesOptions options = new TimeSeriesOptions(200, 100, TimeSpan.MinValue); });
         }
 
         [Fact]
         public void Ctor_ShouldPass()
         {
-            TimeSeriesOptions options = new TimeSeriesOptions(200, 100, false, TimeSpan.MaxValue);
+            TimeSeriesOptions options = new TimeSeriesOptions(200, 100, TimeSpan.MaxValue);
         }
     }
 }
