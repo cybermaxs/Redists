@@ -12,7 +12,7 @@ Install-Package Redists
 # Show me the code !
 _You can review tests or open the sample RandomMonitor to see how to implement it._
 
-### Setup your TimeSeriesClient
+###Setup your TimeSeriesClient
 Redists will not create a new StackExchange.Redis connection. You have to pass an existing connection to the main factory.
 ```csharp
 	//db is and instance of ConnectionMultiplexer.GetDatabase()
@@ -20,12 +20,14 @@ Redists will not create a new StackExchange.Redis connection. You have to pass a
     var client = TimeSeriesFactory.New(db, "msts", tsOptions);
 ```
 
-### Append data / Add new data points
+###Append data
+
 ```csharp
     await client.AddAsync(DateTime.UtcNow, 123456789);
-``
+```
 
-### Get the data
+###Get the data
+
 ```csharp
     await client.RangeAsync(DateTime.UtcNow.AddHours(-1), DateTime.UtcNow);
 ```
