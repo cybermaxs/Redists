@@ -20,10 +20,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{3B7B
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redists.Benchmarks", "samples\Redists.Benchmarks\Redists.Benchmarks.csproj", "{616CD123-C4B0-4A9A-B3B7-C428C343A508}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redists.RandomMonitor", "samples\Redists.RandomMonitor\Redists.RandomMonitor.csproj", "{10CD776D-E1F9-466C-92EE-649D41C1FF63}"
+EndProject
 Global
-	GlobalSection(Performance) = preSolution
-		HasPerformanceSessions = true
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -41,6 +40,10 @@ Global
 		{616CD123-C4B0-4A9A-B3B7-C428C343A508}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{616CD123-C4B0-4A9A-B3B7-C428C343A508}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{616CD123-C4B0-4A9A-B3B7-C428C343A508}.Release|Any CPU.Build.0 = Release|Any CPU
+		{10CD776D-E1F9-466C-92EE-649D41C1FF63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10CD776D-E1F9-466C-92EE-649D41C1FF63}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10CD776D-E1F9-466C-92EE-649D41C1FF63}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10CD776D-E1F9-466C-92EE-649D41C1FF63}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -49,5 +52,6 @@ Global
 		{F074FD5A-5378-4060-9EBF-3EF4BD713E5D} = {0EC6A16C-C03D-4C08-AAAC-26D8DF6895E3}
 		{418C7E60-93CB-4616-96FE-137758AB3131} = {14B72670-5656-4CC0-B340-8CD0B0FAC4B8}
 		{616CD123-C4B0-4A9A-B3B7-C428C343A508} = {3B7B55C5-C2BA-4294-80F9-3E2EBEE3111E}
+		{10CD776D-E1F9-466C-92EE-649D41C1FF63} = {3B7B55C5-C2BA-4294-80F9-3E2EBEE3111E}
 	EndGlobalSection
 EndGlobal

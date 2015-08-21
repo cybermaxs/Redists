@@ -1,0 +1,101 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <link href="https://cdn.rawgit.com/novus/nvd3/v1.8.1/build/nv.d3.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.2/d3.min.js" charset="utf-8"></script>
+    <script src="https://cdn.rawgit.com/novus/nvd3/v1.8.1/build/nv.d3.min.js"></script>
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+
+    <title>Sample Fake Monitor</title>
+</head>
+<body>
+
+    <div id='chart' class='chart half with-transitions'>
+        <svg></svg>
+        <button id='start-stop-button'>Start/Stop Stream</button>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $.ajaxSetup({ cache: false });
+        });
+
+        var chart;
+        var data = [{
+            key: "Stream 1",
+            color: "blue",
+            values: [
+               
+            ]
+        }];
+
+        $.getJSON('api/data', function (d) {
+            for(i in d)
+            {
+                data[0].values.push({
+                    x: d[i].ts,
+                    y: d[i].value
+                });
+                if (data[0].values.length > 60) {
+                    data[0].values.shift();
+                }
+            }
+
+            setupGraph();
+        });
+
+      
+        var setupGraph = function(){   
+
+        nv.addGraph(function() {
+            chart = nv.models.multiBarChart();
+            chart
+                .x(function (d, i) { return d.x });
+
+            chart.xAxis // chart sub-models (ie. xAxis, yAxis, etc) when accessed directly, return themselves, not the parent chart, so need to chain separately
+         .tickFormat(function (d) {
+             return d3.time.format("%H:%M:%S")(new Date(d))
+         });
+            chart.yAxis
+                .axisLabel('Random Number')
+                .tickFormat(d3.format(',.4f'));
+            chart.showXAxis(true).showYAxis(true).rightAlignYAxis(true).margin({ right: 90 });
+
+            d3.select('#chart svg')
+                .datum(data)
+                //.transition().duration(0)
+                .call(chart);
+            nv.utils.windowResize(chart.update);
+            return chart;
+        });
+        var x = 2;
+        var run = true;
+
+        setInterval(function(){
+            if (!run) return;
+
+            $.getJSON('api/data', function (d) {
+                for (i in d) {
+                    data[0].values.push({
+                        x: d[i].ts,
+                        y: d[i].value
+                    });
+                    if (data[0].values.length > 60) {
+                        data[0].values.shift();
+                    }
+                }
+                x++;
+                chart.update();
+            });
+
+        }, 1000);
+
+        d3.select("#start-stop-button").on("click",function() {
+            run = !run;
+        });
+        }
+    </script>
+</body>
+</html>
