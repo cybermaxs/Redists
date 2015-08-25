@@ -1,6 +1,8 @@
 # RedisTS
 
 [![Build status](https://ci.appveyor.com/api/projects/status/vd1il43mgwx66ti8?svg=true)](https://ci.appveyor.com/project/Cybermaxs/redists)
+[![Nuget](https://img.shields.io/nuget/dt/redists.svg)](http://nuget.org/packages/redists)
+[![Nuget](https://img.shields.io/nuget/v/redists.svg)](http://nuget.org/packages/redists)
 
 A very compact representation of a list of samples, usually referred as time series. Inspired from https://github.com/antirez/redis-timeseries
 
