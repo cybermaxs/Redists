@@ -27,4 +27,4 @@ test:
     - Integration
     
 test_script:
-- ps: .\test.ps1
+- ps: .\scripts\run_tests.ps1
