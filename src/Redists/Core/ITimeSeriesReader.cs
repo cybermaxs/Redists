@@ -2,7 +2,7 @@
 
 namespace Redists.Core
 {
-    interface ITimeSeriesReader
+    public interface ITimeSeriesReader
     {
         Task<DataPoint[]> ReadAllAsync(string redisKey);
     }

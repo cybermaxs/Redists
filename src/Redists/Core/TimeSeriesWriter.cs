@@ -24,7 +24,7 @@ namespace Redists.Core
         {
             ManageKeyExpiration(redisKey);
             var toAppend = parser.Serialize(dataPoints);
-            return this.dbAsync.StringAppendAsync(redisKey, toAppend, CommandFlags.FireAndForget);
+            return dbAsync.StringAppendAsync(redisKey, toAppend, CommandFlags.FireAndForget);
         }
 
         private void ManageKeyExpiration(string key)
@@ -33,7 +33,7 @@ namespace Redists.Core
                 return;
 
             var lastSent=expirations.GetOrAdd(key, DateTime.MinValue);
-            if ((DateTime.UtcNow- lastSent)> this.ttl.Value)
+            if ((DateTime.UtcNow- lastSent)> ttl.Value)
             {
                 this.dbAsync.KeyExpireAsync(key, ttl, CommandFlags.FireAndForget);
                 expirations.TryUpdate(key, DateTime.UtcNow, lastSent);

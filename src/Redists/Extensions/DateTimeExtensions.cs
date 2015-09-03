@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Redists.Extensions
 {
@@ -8,9 +7,6 @@ namespace Redists.Extensions
         public const long EpochTicks = 621355968000000000;
         public const long TicksPeriod = 10000000;
         public const long TicksPeriodMs = 10000;
-
-        //epoch time
-        public static readonly DateTime Epoch = new DateTime(EpochTicks, DateTimeKind.Utc);
 
         /// <summary>
         /// Number of milliseconds since epoch(1/1/1970).
@@ -31,7 +27,7 @@ namespace Redists.Extensions
         /// <returns>Rounded Timestamp in ms.</returns>
         public static long ToRoundedTimestamp(this DateTime date, long factor)
         {
-            return ((long)date.ToTimestamp() / factor) * factor;
+            return date.ToTimestamp() / factor * factor;
         }
 
         /// <summary>
@@ -53,7 +49,7 @@ namespace Redists.Extensions
         /// <returns>Rounded Timestamp in seconds.</returns>
         public static long ToRoundedSecondsTimestamp(this DateTime date, long factor)
         {
-            return ((long)date.ToSecondsTimestamp() / factor) * factor;
+            return date.ToSecondsTimestamp() / factor * factor;
         }
 
 

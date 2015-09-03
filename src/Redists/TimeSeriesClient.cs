@@ -17,17 +17,17 @@ namespace Redists
 
         public TimeSeriesClient(string name, TimeSeriesOptions settings, ITimeSeriesReader reader, ITimeSeriesWriter writer)
         {
-            this.prefix = $"ts#" + name + "#";
+            prefix = $"ts#" + name + @"#";
             this.settings = settings;
             this.reader = reader;
             this.writer = writer;
         }
 
-        public Task AddAsync(DateTime at, long value)
+        public Task<long> AddAsync(DateTime at, long value)
         {
             var dataPoint = new DataPoint(at, value);
-            dataPoint.Normalize(this.settings.DataPointNormFactor);
-            var key = this.GetRedisKeyName(dataPoint.ts);
+            dataPoint.Normalize(settings.DataPointNormFactor);
+            var key = GetRedisKeyName(dataPoint.ts);
             return writer.AppendAsync(key, new DataPoint[] { dataPoint });
         }
 
@@ -79,16 +79,16 @@ namespace Redists
 
             foreach (var dt in dts)
             {
-                var tsKey = this.GetRedisKeyName(dt.ToTimestamp());
+                var tsKey = GetRedisKeyName(dt.ToTimestamp());
                 tasks.Add(reader.ReadAllAsync(tsKey));
             }
-            await Task.WhenAll(tasks.ToArray());
+            await Task.WhenAll(tasks.ToArray()).ConfigureAwait(false);
             return tasks.SelectMany(t => t.Result).ToArray();
         }
 
         private string GetRedisKeyName(long ts)
         {
-            return this.prefix + ts.Normalize(this.settings.KeyNormFactor).ToString();
+            return prefix + ts.Normalize(settings.KeyNormFactor).ToString();
         }
     }
 }

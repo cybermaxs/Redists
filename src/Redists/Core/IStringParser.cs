@@ -2,7 +2,7 @@
 
 namespace Redists.Core
 {
-    interface IStringParser<T>
+    internal interface IStringParser<T>
     {
         T[] Parse(string rawString);
         string Serialize(T[] items);

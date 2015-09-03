@@ -19,7 +19,11 @@ namespace Redists.Tests.Configuration
         [Fact]
         public void Ctor_ShouldPass()
         {
-            TimeSeriesOptions options = new TimeSeriesOptions(200, 100, TimeSpan.MaxValue);
+            var options = new TimeSeriesOptions(200, 100, TimeSpan.MaxValue);
+
+            Assert.Equal(200, options.KeyNormFactor);
+            Assert.Equal(100, options.DataPointNormFactor);
+            Assert.Equal(TimeSpan.MaxValue, options.KeyTtl);
         }
     }
 }

@@ -14,14 +14,10 @@ namespace Redists
             Guard.NotNullOrEmpty(name, nameof(name));
             Guard.NotNull(settings, nameof(settings));
 
-            if (dbAsync.Multiplexer==null || !dbAsync.Multiplexer.IsConnected)
-                throw new InvalidOperationException("redis connection is not open or down");
+            if (dbAsync.Multiplexer == null || !dbAsync.Multiplexer.IsConnected)
+                throw new InvalidOperationException("redis connection is not opened or closed");
 
-            var parser = new DynamicDataPointParser();
-            var reader = new TimeSeriesReader(dbAsync, parser);
-            var writer = new TimeSeriesWriter(dbAsync, parser, settings.KeyTtl);
-
-            return new TimeSeriesClient(name, settings, reader, writer);
+            return CreateNewClient(false, dbAsync, name, settings);
         }
 
         public static ITimeSeriesClient NewFixed(IDatabaseAsync dbAsync, string name, TimeSeriesOptions settings)
@@ -31,9 +27,14 @@ namespace Redists
             Guard.NotNull(settings, nameof(settings));
 
             if (dbAsync.Multiplexer == null || !dbAsync.Multiplexer.IsConnected)
-                throw new InvalidOperationException("redis connection is not open or down");
+                throw new InvalidOperationException("redis connection is not opened or closed");
 
-            var parser = new FixedDataPointParser();
+            return CreateNewClient(true, dbAsync, name, settings);
+        }
+
+        private static ITimeSeriesClient CreateNewClient(bool isFixed, IDatabaseAsync dbAsync, string name, TimeSeriesOptions settings)
+        {
+            var parser = isFixed ? (IStringParser <DataPoint>) new FixedDataPointParser() : new DynamicDataPointParser();
             var reader = new TimeSeriesReader(dbAsync, parser);
             var writer = new TimeSeriesWriter(dbAsync, parser, settings.KeyTtl);
 
