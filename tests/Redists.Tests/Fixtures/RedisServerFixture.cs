@@ -4,7 +4,7 @@ using System.Diagnostics;
 using StackExchange.Redis;
 using System.Threading;
 
-namespace Redists.Test.Fixtures
+namespace Redists.Tests.Fixtures
 {
     public class RedisServerFixture : IDisposable
     {

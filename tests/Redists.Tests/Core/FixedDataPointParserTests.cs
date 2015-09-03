@@ -1,7 +1,7 @@
 ﻿using Redists.Core;
 using Xunit;
 
-namespace Redists.Test.Core
+namespace Redists.Tests.Core
 {
     public class FixedDataPointParserTests
     {

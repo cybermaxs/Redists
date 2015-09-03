@@ -9,8 +9,8 @@
     <ProjectGuid>{418C7E60-93CB-4616-96FE-137758AB3131}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Redists.Test</RootNamespace>
-    <AssemblyName>Redists.Test</AssemblyName>
+    <RootNamespace>Redists.Tests</RootNamespace>
+    <AssemblyName>Redists.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>9ac640f2</NuGetPackageImportStamp>

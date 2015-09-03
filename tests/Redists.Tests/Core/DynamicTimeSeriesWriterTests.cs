@@ -5,20 +5,19 @@ using StackExchange.Redis;
 using System;
 using Xunit;
 
-namespace Redists.Test.Core
+namespace Redists.Tests.Core
 {
-    public class FixedTimeSeriesWriterTests
+    public class DynamicTimeSeriesWriterTests
     {
         private readonly TimeSeriesWriter writer;
         private Fixture fixture = new Fixture();
         private Mock<IDatabase> mockOfDb;
 
-        public FixedTimeSeriesWriterTests()
+        public DynamicTimeSeriesWriterTests()
         {
             mockOfDb = new Mock<IDatabase>();
             mockOfDb.Setup(db => db.StringAppendAsync(It.IsAny<string>(), It.IsAny<RedisValue>(), It.IsAny<CommandFlags>())).ReturnsAsync(10);
-            var parser = new FixedDataPointParser();
-
+            var parser = new DynamicDataPointParser(); ;
             writer = new TimeSeriesWriter(mockOfDb.Object, parser, TimeSpan.MaxValue);
         }
 
@@ -34,7 +33,7 @@ namespace Redists.Test.Core
             Assert.False(t.IsFaulted);
             Assert.False(t.IsCanceled);
 
-            mockOfDb.Verify(db => db.StringAppendAsync(key, "0000000000123:0000000000000000456#", It.IsAny<CommandFlags>()), Times.Once);
+            mockOfDb.Verify(db => db.StringAppendAsync(key, "123:456#", It.IsAny<CommandFlags>()), Times.Once);
         }
     }
 }

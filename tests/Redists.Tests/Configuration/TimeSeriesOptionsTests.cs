@@ -2,7 +2,7 @@
 using System;
 using Xunit;
 
-namespace Redists.Test.Configuration
+namespace Redists.Tests.Configuration
 {
     public class TimeSeriesOptionsTests
     {

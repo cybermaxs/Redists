@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Redists.Test
+namespace Redists.Tests
 {
     public class TimeSeriesClientTests
     {

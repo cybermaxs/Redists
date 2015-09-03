@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using Xunit;
 
-namespace Redists.Test.Utils
+namespace Redists.Tests.Utils
 {
     public class GuardTests
     {

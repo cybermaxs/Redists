@@ -1,5 +1,5 @@
 ﻿using Ploeh.AutoFixture;
-using Redists.Test.Fixtures;
+using Redists.Tests.Fixtures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,7 @@ using Xunit;
 using Redists.Extensions;
 using Redists.Configuration;
 
-namespace Redists.Test
+namespace Redists.Tests
 {
     [Collection("RedisServer")]
     public class VariableIntegrationTests

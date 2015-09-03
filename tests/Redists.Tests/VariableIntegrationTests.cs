@@ -1,14 +1,14 @@
 ﻿using Ploeh.AutoFixture;
 using Redists.Configuration;
 using Redists.Extensions;
-using Redists.Test.Fixtures;
+using Redists.Tests.Fixtures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Redists.Test
+namespace Redists.Tests
 {
     [Collection("RedisServer")]
     public class FixedIntegrationTests

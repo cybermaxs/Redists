@@ -4,7 +4,7 @@ using StackExchange.Redis;
 using System;
 using Xunit;
 
-namespace Redists.Test
+namespace Redists.Tests
 {
     public class TimeSeriesFactoryTests
     {

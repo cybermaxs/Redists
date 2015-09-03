@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Xunit;
 
-namespace Redists.Test
+namespace Redists.Tests
 {
     public class DataPointTests
     {

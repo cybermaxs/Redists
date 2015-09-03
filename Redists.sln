@@ -7,9 +7,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redists", "src\Redists\Redi
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{0EC6A16C-C03D-4C08-AAAC-26D8DF6895E3}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{14B72670-5656-4CC0-B340-8CD0B0FAC4B8}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{14B72670-5656-4CC0-B340-8CD0B0FAC4B8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redists.Test", "test\Redists.Test\Redists.Test.csproj", "{418C7E60-93CB-4616-96FE-137758AB3131}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redists.Tests", "tests\Redists.Tests\Redists.Tests.csproj", "{418C7E60-93CB-4616-96FE-137758AB3131}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{4972B1D2-2043-4BFD-917F-0111056BAE5B}"
 	ProjectSection(SolutionItems) = preProject

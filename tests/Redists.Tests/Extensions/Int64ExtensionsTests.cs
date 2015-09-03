@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Xunit;
 using Redists.Extensions;
 
-namespace Redists.Test.Extensions
+namespace Redists.Tests.Extensions
 {
     public class Int64ExtensionsTests
     {

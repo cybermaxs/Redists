@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Redists.Test.Core
+namespace Redists.Tests.Core
 {
     public class DynamicTimeSeriesReaderTests
     {

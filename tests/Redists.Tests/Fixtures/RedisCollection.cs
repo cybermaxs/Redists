@@ -1,6 +1,6 @@
 ﻿using Xunit;
 
-namespace Redists.Test.Fixtures
+namespace Redists.Tests.Fixtures
 {
     [CollectionDefinition("RedisServer")]
     public class RedisCollection : ICollectionFixture<RedisServerFixture>
