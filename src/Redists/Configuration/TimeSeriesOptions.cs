@@ -20,13 +20,25 @@ namespace Redists.Configuration
         /// Normalization factor for each data point (Milliseconds).
         /// </summary>
         public long DataPointNormFactor { get; private set; }
+
+        /// <summary>
+        /// Prefix added to the TimeSeries name.
+        /// </summary>
+        public string Prefix { get; private set; }
+        /// <summary>
+        /// Delimiter between each data points
+        /// </summary>
+        public char Delimiter { get; private set; }
+
         /// <summary>
         /// Default Constructor.
         /// </summary>
         /// <param name="keyNormalizationFactor">Key normalization factor (ms)</param>
         /// <param name="dataPointNormalizationFactor">Data point normalization factor (ms)</param>
         /// <param name="keyTtl">Key Ttl value</param>
-        public TimeSeriesOptions(long keyNormalizationFactor, long dataPointNormalizationFactor, TimeSpan? keyTtl)
+        /// <param name="prefix">Prefix added to the TimeSeries name</param>
+        /// <param name="delimiter">Delimiter between each data points</param>
+        public TimeSeriesOptions(long keyNormalizationFactor, long dataPointNormalizationFactor, TimeSpan? keyTtl, string prefix = Constants.DefaultTsPrefix, char delimiter = Constants.DefaultInterDelimiterChar)
         {
             if (keyNormalizationFactor < dataPointNormalizationFactor)
                 throw new InvalidOperationException("keyNormalizationFactor should be greater than dataPointNormalizationFactor");
@@ -34,9 +46,11 @@ namespace Redists.Configuration
             if (keyTtl.HasValue && keyTtl.Value.TotalMilliseconds < keyNormalizationFactor)
                 throw new InvalidOperationException("keyTtl should be greater than keyNormalizationFactor");
 
-            this.KeyNormFactor = keyNormalizationFactor;
-            this.KeyTtl = keyTtl;
-            this.DataPointNormFactor = dataPointNormalizationFactor;
+            KeyNormFactor = keyNormalizationFactor;
+            KeyTtl = keyTtl;
+            DataPointNormFactor = dataPointNormalizationFactor;
+            Prefix = prefix;
+            Delimiter = delimiter;
         }
     }
 }

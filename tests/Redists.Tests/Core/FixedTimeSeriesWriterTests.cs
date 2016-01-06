@@ -18,7 +18,7 @@ namespace Redists.Tests.Core
         {
             mockOfDb = new Mock<IDatabase>();
             mockOfDb.Setup(db => db.StringAppendAsync(It.IsAny<string>(), It.IsAny<RedisValue>(), It.IsAny<CommandFlags>())).ReturnsAsync(10);
-            var parser = new FixedDataPointParser();
+            var parser = new FixedDataPointParser(Constants.DefaultInterDelimiterChar, Constants.DefaultIntraDelimiterChar);
 
             writerWithExpiration = new TimeSeriesWriter(mockOfDb.Object, parser, TimeSpan.FromDays(1));
             writerWithoutExpiration = new TimeSeriesWriter(mockOfDb.Object, parser, null);

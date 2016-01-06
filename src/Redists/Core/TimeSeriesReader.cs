@@ -6,12 +6,14 @@ namespace Redists.Core
 {
     internal class TimeSeriesReader : ITimeSeriesReader
     {
+        private readonly char interDelimiter;
         private readonly IDatabaseAsync dbAsync;
         private readonly IStringParser<DataPoint> parser;
-        public TimeSeriesReader(IDatabaseAsync dbAsync, IStringParser<DataPoint> parser)
+        public TimeSeriesReader(IDatabaseAsync dbAsync, IStringParser<DataPoint> parser, char interDelimiter)
         {
             this.dbAsync = dbAsync;
             this.parser = parser;
+            this.interDelimiter = interDelimiter;
         }
 
         public async Task<DataPoint[]> ReadAllAsync(string redisKey)
@@ -22,8 +24,8 @@ namespace Redists.Core
             var cursor = 0;
             while ( (partialRaw = await ReadBlockAsync(redisKey, cursor).ConfigureAwait(false))!=string.Empty)
             {
-                var lastindex = partialRaw.LastIndexOf(Constants.InterDelimiterChar);
-                var partialRawStrict = partialRaw[partialRaw.Length-1]!=Constants.InterDelimiterChar? partialRaw.Remove(lastindex + 1) : partialRaw;
+                var lastindex = partialRaw.LastIndexOf(interDelimiter);
+                var partialRawStrict = partialRaw[partialRaw.Length-1]!= interDelimiter ? partialRaw.Remove(lastindex + 1) : partialRaw;
 
                 dataPoints.AddRange(parser.Parse(partialRawStrict));
                 cursor += partialRawStrict.Length;

@@ -21,8 +21,8 @@ namespace Redists.Tests.Core
             mockOfDb.Setup(db => db.StringGetRangeAsync("short", It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CommandFlags>())).ReturnsAsync(Generate(100));
             mockOfDb.Setup(db => db.StringGetRangeAsync("long", It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CommandFlags>())).Returns<RedisKey, long, long, CommandFlags>(this.GeneratePartial5000);
             mockOfDb.Setup(db => db.StringGetRangeAsync("broken", It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CommandFlags>())).Returns<RedisKey, long, long, CommandFlags>(this.GeneratePartial5000);
-            var parser = new DynamicDataPointParser();
-            reader = new TimeSeriesReader(mockOfDb.Object, parser);
+            var parser = new DynamicDataPointParser(Constants.DefaultInterDelimiterChar, Constants.DefaultIntraDelimiterChar);
+            reader = new TimeSeriesReader(mockOfDb.Object, parser, Constants.DefaultInterDelimiterChar);
         }
 
         [Fact]
@@ -76,7 +76,7 @@ namespace Redists.Tests.Core
             StringBuilder builder = new StringBuilder();
             foreach (var i in Enumerable.Range(1, nbItems))
             {
-                builder.Append((10000 + i) + ":" + i + Constants.InterDelimiterChar);
+                builder.Append((10000 + i) + ":" + i + Constants.DefaultInterDelimiterChar);
             }
             return builder.ToString();
         }
@@ -87,7 +87,7 @@ namespace Redists.Tests.Core
             StringBuilder builder = new StringBuilder();
             foreach (var i in Enumerable.Range(1, 5000))
             {
-                builder.Append((5000 + i) + ":" + i + Constants.InterDelimiterChar);
+                builder.Append((5000 + i) + ":" + i + Constants.DefaultInterDelimiterChar);
             }
             var all = builder.ToString();
 

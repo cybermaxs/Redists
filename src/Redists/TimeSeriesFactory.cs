@@ -52,8 +52,8 @@ namespace Redists
 
         private static ITimeSeriesClient CreateNewClient(bool isFixed, IDatabaseAsync dbAsync, string name, TimeSeriesOptions settings)
         {
-            var parser = isFixed ? (IStringParser <DataPoint>) new FixedDataPointParser() : new DynamicDataPointParser();
-            var reader = new TimeSeriesReader(dbAsync, parser);
+            var parser = isFixed ? (IStringParser <DataPoint>) new FixedDataPointParser(settings.Delimiter, Constants.DefaultIntraDelimiterChar) : new DynamicDataPointParser(settings.Delimiter, Constants.DefaultIntraDelimiterChar);
+            var reader = new TimeSeriesReader(dbAsync, parser, settings.Delimiter);
             var writer = new TimeSeriesWriter(dbAsync, parser, settings.KeyTtl);
 
             return new TimeSeriesClient(name, settings, reader, writer);

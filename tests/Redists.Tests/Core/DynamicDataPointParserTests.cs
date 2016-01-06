@@ -5,7 +5,7 @@ namespace Redists.Tests.Core
 {
     public class DynamicDataPointParserTests
     {
-        DynamicDataPointParser parser = new DynamicDataPointParser();
+        DynamicDataPointParser parser = new DynamicDataPointParser(Constants.DefaultInterDelimiterChar, Constants.DefaultIntraDelimiterChar);
 
         [Fact]
         public void Serialize_EdgesCases_ShouldPass()

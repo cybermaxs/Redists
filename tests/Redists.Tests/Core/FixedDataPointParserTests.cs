@@ -5,7 +5,7 @@ namespace Redists.Tests.Core
 {
     public class FixedDataPointParserTests
     {
-        FixedDataPointParser parser = new FixedDataPointParser();
+        FixedDataPointParser parser = new FixedDataPointParser(Constants.DefaultInterDelimiterChar, Constants.DefaultIntraDelimiterChar);
 
         [Fact]
         public void Serialize_EdgesCases_ShouldPass()

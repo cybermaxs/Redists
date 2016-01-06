@@ -4,10 +4,19 @@ namespace Redists.Core
 {
     internal sealed class FixedDataPointParser : IStringParser<DataPoint>
     {
+
         public const int KeyLength = 13;
         public const string KeyFormat = "D13";
         public const int ValueLength = 19;
         public const string ValueFormat = "D19";
+
+        private readonly char intraDelimiter;
+        private readonly char interDelimiter;
+        public FixedDataPointParser(char interDelimiter, char intraDelimiter)
+        {
+            this.interDelimiter = interDelimiter;
+            this.intraDelimiter = intraDelimiter;
+        }
 
         public DataPoint[] Parse(string raw)
         {
@@ -22,7 +31,7 @@ namespace Redists.Core
 
             while (current < raw.Length)
             {
-                if(raw[current]==Constants.InterDelimiterChar)
+                if(raw[current]== interDelimiter)
                 {
                     current++;
                     continue;
@@ -50,9 +59,9 @@ namespace Redists.Core
             foreach (var dp in dataPoints)
             {
                 builder.Append(dp.timestamp.ToString(KeyFormat));
-                builder.Append(Constants.IntraDelimiterChar);
+                builder.Append(intraDelimiter);
                 builder.Append(dp.value.ToString(ValueFormat));
-                builder.Append(Constants.InterDelimiterChar);
+                builder.Append(interDelimiter);
             }
 
             return builder.ToString();

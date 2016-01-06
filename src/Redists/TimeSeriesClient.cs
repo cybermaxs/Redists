@@ -17,7 +17,7 @@ namespace Redists
 
         public TimeSeriesClient(string name, TimeSeriesOptions settings, ITimeSeriesReader reader, ITimeSeriesWriter writer)
         {
-            prefix = $"ts#" + name + @"#";
+            prefix = $"{settings.Prefix}{settings.Delimiter}{name}{settings.Delimiter}";
             this.settings = settings;
             this.reader = reader;
             this.writer = writer;

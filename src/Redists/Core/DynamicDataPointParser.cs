@@ -5,6 +5,14 @@ namespace Redists.Core
 {
     internal sealed class DynamicDataPointParser : IStringParser<DataPoint>
     {
+        private readonly char intraDelimiter;
+        private readonly char interDelimiter;
+        public DynamicDataPointParser(char interDelimiter, char intraDelimiter)
+        {
+            this.interDelimiter = interDelimiter;
+            this.intraDelimiter = intraDelimiter;
+        }
+
         public DataPoint[] Parse(string raw)
         {
             if (string.IsNullOrEmpty(raw))
@@ -20,7 +28,7 @@ namespace Redists.Core
 
             while (startIndex < raw.Length)
             {
-                currentIndex = raw.IndexOf(Constants.InterDelimiterChar, startIndex);
+                currentIndex = raw.IndexOf(interDelimiter, startIndex);
 
                 if (currentIndex == -1) //last part
                     currentIndex = raw.Length;
@@ -28,7 +36,7 @@ namespace Redists.Core
                 if (currentIndex != startIndex)//delimiter at first char
                 {
                     buffer = raw.Substring(startIndex, currentIndex - startIndex);
-                    var intraIndex = buffer.IndexOf(Constants.IntraDelimiterChar);
+                    var intraIndex = buffer.IndexOf(intraDelimiter);
                     long.TryParse(buffer.Substring(0, intraIndex), out ts);
                     long.TryParse(buffer.Substring(intraIndex + 1, buffer.Length - intraIndex - 1), out value);
 
@@ -52,9 +60,9 @@ namespace Redists.Core
             foreach (var dp in dataPoints)
             {
                 builder.Append(dp.timestamp);
-                builder.Append(Constants.IntraDelimiterChar);
+                builder.Append(intraDelimiter);
                 builder.Append(dp.value);
-                builder.Append(Constants.InterDelimiterChar);
+                builder.Append(interDelimiter);
             }
 
             return builder.ToString();

@@ -6,8 +6,8 @@
     internal class Constants
     {
         public const long BufferSize = 10000;
-        public const string TsPrefix = "ts";
-        public const char InterDelimiterChar = '#';
-        public const char IntraDelimiterChar = ':';
+        public const string DefaultTsPrefix = "ts";
+        public const char DefaultInterDelimiterChar = '#';
+        public const char DefaultIntraDelimiterChar = ':';
     }
 }
