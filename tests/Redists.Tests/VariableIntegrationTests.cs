@@ -41,7 +41,7 @@ namespace Redists.Tests
             foreach (var i in Enumerable.Range(0, 3599))
             {
                 Assert.Equal(i, r[i].value);
-                Assert.Equal(start.AddSeconds(i).ToRoundedTimestamp(1000), r[i].ts);
+                Assert.Equal(start.AddSeconds(i).ToRoundedTimestamp(1000), r[i].timestamp);
             }
         }
 
@@ -79,7 +79,7 @@ namespace Redists.Tests
             {
                 var current = r[i];
                 Assert.Equal(i, current.value);
-                Assert.Equal(start.AddSeconds(i).ToRoundedTimestamp(1000), current.ts);
+                Assert.Equal(start.AddSeconds(i).ToRoundedTimestamp(1000), current.timestamp);
             }
 
         }

@@ -3,7 +3,6 @@ using Ploeh.AutoFixture;
 using Redists.Core;
 using StackExchange.Redis;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 

@@ -43,7 +43,7 @@ namespace Redists.Tests.Core
 
             Assert.NotNull(dataPoint);
             Assert.True(dataPoint.Length == 1);
-            Assert.Equal(ts, dataPoint[0].ts);
+            Assert.Equal(ts, dataPoint[0].timestamp);
             Assert.Equal(value, dataPoint[0].value);
         }
 
@@ -54,11 +54,11 @@ namespace Redists.Tests.Core
 
             Assert.NotNull(dataPoints);
             Assert.Equal(3, dataPoints.Length);
-            Assert.Equal(111, dataPoints[0].ts);
+            Assert.Equal(111, dataPoints[0].timestamp);
             Assert.Equal(222, dataPoints[0].value);
-            Assert.Equal(333, dataPoints[1].ts);
+            Assert.Equal(333, dataPoints[1].timestamp);
             Assert.Equal(444, dataPoints[1].value);
-            Assert.Equal(555, dataPoints[2].ts);
+            Assert.Equal(555, dataPoints[2].timestamp);
             Assert.Equal(666, dataPoints[2].value);
         }
     }

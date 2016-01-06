@@ -3,7 +3,7 @@
     /// <summary>
     /// Various Constants.
     /// </summary>
-    public class Constants
+    internal class Constants
     {
         public const long BufferSize = 10000;
         public const string TsPrefix = "ts";

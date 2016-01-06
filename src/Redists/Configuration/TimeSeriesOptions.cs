@@ -25,7 +25,6 @@ namespace Redists.Configuration
         /// </summary>
         /// <param name="keyNormalizationFactor">Key normalization factor (ms)</param>
         /// <param name="dataPointNormalizationFactor">Data point normalization factor (ms)</param>
-        /// <param name="useFixedSize">Fixed or dynamic dataPoint size</param>
         /// <param name="keyTtl">Key Ttl value</param>
         public TimeSeriesOptions(long keyNormalizationFactor, long dataPointNormalizationFactor, TimeSpan? keyTtl)
         {

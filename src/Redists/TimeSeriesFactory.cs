@@ -6,8 +6,19 @@ using System;
 
 namespace Redists
 {
+    /// <summary>
+    /// Default Factory for TimeSeries.
+    /// Allow to create fixed/dynamic TimeSeries Client.
+    /// </summary>
     public static class TimeSeriesFactory
     {
+        /// <summary>
+        /// Initialize a new TimeSeriesClient with a dynamic datapoint size.
+        /// </summary>
+        /// <param name="dbAsync">Connected instance of IDatabaseAsync</param>
+        /// <param name="name">Name of the TimeSeries (prefix).</param>
+        /// <param name="settings">Settings of the TimeSeries.</param>
+        /// <returns>An Instance of ITimeSeriesClient</returns>
         public static ITimeSeriesClient New(IDatabaseAsync dbAsync, string name, TimeSeriesOptions settings)
         {
             Guard.NotNull(dbAsync, nameof(dbAsync));
@@ -20,6 +31,13 @@ namespace Redists
             return CreateNewClient(false, dbAsync, name, settings);
         }
 
+        /// <summary>
+        /// Initialize a new TimeSeriesClient with a fixed datapoint size.
+        /// </summary>
+        /// <param name="dbAsync">Connected instance of IDatabaseAsync</param>
+        /// <param name="name">Name of the TimeSeries (prefix).</param>
+        /// <param name="settings">Settings of the TimeSeries.</param>
+        /// <returns>An Instance of ITimeSeriesClient</returns>
         public static ITimeSeriesClient NewFixed(IDatabaseAsync dbAsync, string name, TimeSeriesOptions settings)
         {
             Guard.NotNull(dbAsync, nameof(dbAsync));

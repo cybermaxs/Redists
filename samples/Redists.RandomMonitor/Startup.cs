@@ -3,7 +3,6 @@ using Microsoft.Owin.FileSystems;
 using Microsoft.Owin.StaticFiles;
 using Owin;
 using Redists.Configuration;
-using StackExchange.Redis;
 using System;
 using System.Linq;
 using System.Web.Http;

@@ -16,7 +16,7 @@ namespace Redists.Core
 
         public async Task<DataPoint[]> ReadAllAsync(string redisKey)
         {
-            ///read by batch
+            // read by batch
             var dataPoints = new List<DataPoint>();
             var partialRaw = string.Empty;
             var cursor = 0;

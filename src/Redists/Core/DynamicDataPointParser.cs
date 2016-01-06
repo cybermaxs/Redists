@@ -47,11 +47,11 @@ namespace Redists.Core
             if (dataPoints == null || dataPoints.Length == 0)
                 return string.Empty;
 
-            var fixedSize = 13 + 2 + 4; //ts + delimiters + value of 1000
+            const int fixedSize = 13 + 2 + 4; //ts + delimiters + value of 1000
             var builder = new StringBuilder(dataPoints.Length * fixedSize);
             foreach (var dp in dataPoints)
             {
-                builder.Append(dp.ts);
+                builder.Append(dp.timestamp);
                 builder.Append(Constants.IntraDelimiterChar);
                 builder.Append(dp.value);
                 builder.Append(Constants.InterDelimiterChar);

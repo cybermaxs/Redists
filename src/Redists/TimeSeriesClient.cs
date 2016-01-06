@@ -27,7 +27,7 @@ namespace Redists
         {
             var dataPoint = new DataPoint(at, value);
             dataPoint.Normalize(settings.DataPointNormFactor);
-            var key = GetRedisKeyName(dataPoint.ts);
+            var key = GetRedisKeyName(dataPoint.timestamp);
             return writer.AppendAsync(key, new DataPoint[] { dataPoint });
         }
 
@@ -41,7 +41,7 @@ namespace Redists
             foreach (var dataPoint in dataPoints)
             {
                 dataPoint.Normalize(this.settings.DataPointNormFactor);
-                var redisKey = this.GetRedisKeyName(dataPoint.ts);
+                var redisKey = this.GetRedisKeyName(dataPoint.timestamp);
                 List<DataPoint> list;
                 if(!groups.TryGetValue(redisKey, out list))
                 {

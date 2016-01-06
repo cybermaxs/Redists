@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Redists.Core
+﻿namespace Redists.Core
 {
     internal interface IStringParser<T>
     {

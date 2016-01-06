@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 
 namespace Redists.Core
 {
@@ -13,7 +11,7 @@ namespace Redists.Core
 
         public DataPoint[] Parse(string raw)
         {
-            var fixedSize = KeyLength + ValueLength + 1;
+            const int fixedSize = KeyLength + ValueLength + 1;
             var nbItems = raw.Length / (fixedSize + 1);
             var results = new DataPoint[nbItems == 0 ? 1 : nbItems];
 
@@ -46,12 +44,12 @@ namespace Redists.Core
             if (dataPoints == null || dataPoints.Length == 0)
                 return string.Empty;
 
-            var fixedSize = KeyLength + ValueLength + 2;
+            const int fixedSize = KeyLength + ValueLength + 2;
 
             var builder = new StringBuilder(dataPoints.Length * fixedSize);
             foreach (var dp in dataPoints)
             {
-                builder.Append(dp.ts.ToString(KeyFormat));
+                builder.Append(dp.timestamp.ToString(KeyFormat));
                 builder.Append(Constants.IntraDelimiterChar);
                 builder.Append(dp.value.ToString(ValueFormat));
                 builder.Append(Constants.InterDelimiterChar);
@@ -59,6 +57,5 @@ namespace Redists.Core
 
             return builder.ToString();
         }
-    
     }
 }

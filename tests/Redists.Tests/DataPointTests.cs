@@ -12,7 +12,7 @@ namespace Redists.Tests
             var dp1 = new DataPoint(1437724399000, 456);
             var dp2 = new DataPoint(new DateTime(2015, 7, 24, 7, 53, 19, DateTimeKind.Utc), 456);
 
-            Assert.Equal(dp1.ts, dp2.ts);
+            Assert.Equal(dp1.timestamp, dp2.timestamp);
         }
 
         [Fact]
@@ -74,7 +74,7 @@ namespace Redists.Tests
 
             dp.Normalize(10);
 
-            Assert.Equal(120, dp.ts);
+            Assert.Equal(120, dp.timestamp);
         }
     }
 }
