@@ -43,6 +43,15 @@ namespace Redists
             this.value = value;
         }
 
+        /// <summary>
+        /// Get DateTime for the current timestamp.
+        /// </summary>
+        /// <returns></returns>
+        public DateTime GetOriginalDateTime()
+        {
+            return timestamp.ToDateTime();
+        }
+
         internal void Normalize(long factor)
         {
             timestamp = timestamp.Normalize(factor);

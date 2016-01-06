@@ -53,7 +53,7 @@ namespace Redists.Extensions
         }
 
 
-        public static DateTime[] ToKeyDateTimes(this DateTime from, DateTime to, long factor)
+        internal static DateTime[] ToKeyDateTimes(this DateTime from, DateTime to, long factor)
         {
             var end = to.ToTimestamp();
             var current = from.ToRoundedTimestamp(factor);
