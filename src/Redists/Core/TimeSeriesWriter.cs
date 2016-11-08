@@ -20,22 +20,23 @@ namespace Redists.Core
             this.ttl = ttl;
         }
 
-        public Task<long> AppendAsync(string redisKey, DataPoint[] dataPoints)
+        public async Task<long> AppendAsync(string redisKey, DataPoint[] dataPoints)
         {
-            ManageKeyExpiration(redisKey);
             var toAppend = parser.Serialize(dataPoints);
-            return dbAsync.StringAppendAsync(redisKey, toAppend, CommandFlags.FireAndForget);
+            var written = await dbAsync.StringAppendAsync(redisKey, toAppend);
+            await ManageKeyExpiration(redisKey).ConfigureAwait(false);
+            return written;
         }
 
-        private void ManageKeyExpiration(string key)
+        private async Task ManageKeyExpiration(string key)
         {
             if (!this.ttl.HasValue)
                 return;
 
-            var lastSent=expirations.GetOrAdd(key, DateTime.MinValue);
-            if ((DateTime.UtcNow- lastSent)> ttl.Value)
+            var lastSent = expirations.GetOrAdd(key, DateTime.MinValue);
+            if ((DateTime.UtcNow - lastSent) > ttl.Value)
             {
-                this.dbAsync.KeyExpireAsync(key, ttl, CommandFlags.FireAndForget);
+                await this.dbAsync.KeyExpireAsync(key, ttl, CommandFlags.FireAndForget).ConfigureAwait(false);
                 expirations.TryUpdate(key, DateTime.UtcNow, lastSent);
             }
         }

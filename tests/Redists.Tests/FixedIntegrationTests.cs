@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Xunit;
 using Redists.Extensions;
 using Redists.Configuration;
+using StackExchange.Redis;
 
 namespace Redists.Tests
 {
@@ -15,12 +16,14 @@ namespace Redists.Tests
     {
         private Fixture fixture;
         private ITimeSeriesClient tsClient;
+        private IDatabaseAsync db;
 
         public VariableIntegrationTests(RedisServerFixture redisServer)
         {
             this.fixture = new Fixture();
             redisServer.Reset();
-            tsClient = TimeSeriesFactory.New(redisServer.GetDatabase(0), "myts", new TimeSeriesOptions(3600*1000, 1000, TimeSpan.FromHours(1)));
+            db = redisServer.GetDatabase(0);
+            tsClient = TimeSeriesFactory.New(db, "myts", new TimeSeriesOptions(3600*1000, 1000, TimeSpan.FromHours(1)));
         }
 
         [Fact]
@@ -32,10 +35,14 @@ namespace Redists.Tests
             var tasks = new List<Task>();
             foreach (var i in Enumerable.Range(0, 3600))
             {
-                tasks.Add(tsClient.AddAsync( start.AddSeconds(i), i));
+                tasks.Add(tsClient.AddAsync( start.AddSeconds(i), i)); 
             }
             await Task.WhenAll(tasks);
 
+            // check ttl
+            var ttl = await db.KeyTimeToLiveAsync($"ts{Constants.DefaultInterDelimiterChar}myts{Constants.DefaultInterDelimiterChar}{start.ToRoundedTimestamp(3600 * 1000)}");
+            Assert.NotNull(ttl);
+            //get all
             var r = await tsClient.AllSinceAsync(start);
             Assert.Equal(3600, r.Length);
             foreach (var i in Enumerable.Range(0, 3599))
@@ -59,6 +66,10 @@ namespace Redists.Tests
 
             var r = await tsClient.AllSinceAsync(now);
             Assert.Equal(1000, r.Length);
+
+            //ttl
+            var ttl = await db.KeyTimeToLiveAsync($"ts{Constants.DefaultInterDelimiterChar}myts{Constants.DefaultInterDelimiterChar}{now.ToRoundedTimestamp(3600 * 1000)}");
+            Assert.NotNull(ttl);
         }
 
         [Fact]
@@ -73,6 +84,10 @@ namespace Redists.Tests
                 datas.Add(new DataPoint(start.AddSeconds(i), i));
             }
             await tsClient.AddAsync(datas.ToArray());
+
+            //ttl
+            var ttl = await db.KeyTimeToLiveAsync($"ts{Constants.DefaultInterDelimiterChar}myts{Constants.DefaultInterDelimiterChar}{start.ToRoundedTimestamp(3600 * 1000)}");
+            Assert.NotNull(ttl);
 
             var r = await tsClient.AllSinceAsync(start);
             Assert.Equal(100, r.Length);
