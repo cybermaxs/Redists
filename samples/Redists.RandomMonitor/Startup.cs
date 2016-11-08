@@ -25,7 +25,7 @@ namespace Redists.RandomMonitor
             var start = DateTime.UtcNow.AddSeconds(-60);
             tmpclient.AddAsync(Enumerable.Range(1, 60).Select(t => new DataPoint(start.AddSeconds(t), tmpRandom.Next(1000))).ToArray()).Wait();
             //fake data generator
-            TaskManager.AddTask(() =>
+            JobManager.AddJob(() =>
             {
                 var client = TimeSeriesFactory.New(RedisServer.GetDatabase(0), "fkts", new TimeSeriesOptions(60 * 1000, 1000, TimeSpan.FromHours(1)));
                 var r = new Random();

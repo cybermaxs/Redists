@@ -1,4 +1,4 @@
-.\packages\OpenCover.4.6.166\tools\OpenCover.Console.exe -register:user -target:.\packages\xunit.runner.console.2.0.0\tools\xunit.console.x86.exe -targetargs:"""tests\Redists.Tests\bin\$env:CONFIGURATION\Redists.Tests.dll"" -noshadow -appveyor -notrait ""category=Integration""" -filter:"+[Redists]*" -output:opencoverCoverage.xml
+.\packages\OpenCover.4.6.519\tools\OpenCover.Console.exe -register:user -target:.\packages\xunit.runner.console.2.1.0\tools\xunit.console.x86.exe -targetargs:"""tests\Redists.Tests\bin\$env:CONFIGURATION\Redists.Tests.dll"" -noshadow -appveyor -notrait ""category=Integration""" -filter:"+[Redists]*" -output:opencoverCoverage.xml
 
  $coveralls = (Resolve-Path "./packages/coveralls.net.*/tools/csmacnz.coveralls.exe").ToString()
 
